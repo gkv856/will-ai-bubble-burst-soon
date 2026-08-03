@@ -545,7 +545,7 @@ function WeeklyScorePanel({ latestData }: { latestData: LatestData | null }) {
 
       {/* Factor bars — horizontal chart per skill recommendation */}
       <div className="px-6 py-5 space-y-3.5">
-        <p className="text-[9px] font-mono text-white/20 uppercase tracking-[0.15em] mb-4">Score breakdown — each bar shows that signal's risk level (0 = safe, 100 = danger)</p>
+        <p className="text-[9px] font-mono text-white/20 uppercase tracking-[0.15em] mb-4">Score breakdown — each bar shows that signal&apos;s risk level (0 = safe, 100 = danger)</p>
         {FACTOR_META.map(({ id, label, weight }) => {
           const raw = latestData?.factors?.[id] ?? null;
           const pct = raw !== null ? raw : 0;
@@ -630,7 +630,7 @@ export function MathBreakdown({ latestData }: { latestData?: LatestData | null }
           How the score is calculated
         </h2>
         <p className="text-sm text-white/35 leading-relaxed max-w-2xl">
-          No finance degree needed. Here's how we go from raw data to the number you see at the top of the page — explained like you're explaining it to a friend.
+          No finance degree needed. Here&apos;s how we go from raw data to the number you see at the top of the page — explained like you&apos;re explaining it to a friend.
         </p>
       </div>
 

@@ -1,13 +1,15 @@
 "use client";
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
+import type { TooltipContentProps } from "recharts";
 import { TrendingUp } from "lucide-react";
+import type { WeekData } from "@/lib/types";
 
 interface HistoryChartProps {
-  historyData: any[];
+  historyData: WeekData[];
 }
 
-function CustomTooltip({ active, payload, label }: any) {
+function CustomTooltip({ active, payload, label }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
   const score = payload[0].value as number;
   const color = score < 40 ? "#10b981" : score < 70 ? "#f59e0b" : "#ef4444";
@@ -80,7 +82,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
               domain={[0, 100]}
               tickFormatter={(v) => `${v}`}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }} />
+            <Tooltip content={CustomTooltip} cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }} />
             <Line
               type="monotone"
               dataKey="score"

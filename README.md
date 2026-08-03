@@ -1,6 +1,6 @@
 # AI Bubble Tracker
 
-[![Weekly Data Update](https://github.com/gkv856/ai-bubble-tracker/actions/workflows/update-data.yml/badge.svg)](https://github.com/gkv856/ai-bubble-tracker/actions/workflows/update-data.yml)
+[![Weekly Data Update](https://github.com/gkv856/will-ai-bubble-burst-soon/actions/workflows/update-data.yml/badge.svg)](https://github.com/gkv856/will-ai-bubble-burst-soon/actions/workflows/update-data.yml)
 
 An automated, data-driven dashboard tracking macroeconomic signals to determine if the AI investment cycle is in bubble territory. 
 
@@ -34,6 +34,10 @@ The composite risk score is built by weighting the following factors:
 ### 1. Data Pipeline Setup (Python)
 
 1. Clone the repository.
+   ```bash
+   git clone https://github.com/gkv856/will-ai-bubble-burst-soon.git
+   cd will-ai-bubble-burst-soon
+   ```
 2. Create a virtual environment and install dependencies:
    ```bash
    python -m venv venv

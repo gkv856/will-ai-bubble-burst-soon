@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { FactorCard } from "@/components/dashboard/FactorCard";
 import { CompositeScore } from "@/components/dashboard/CompositeScore";
 import { HistoryChart } from "@/components/dashboard/HistoryChart";
+import type { WeekData } from "@/lib/types";
 import {
   Activity,
   GitBranch,
@@ -113,8 +114,8 @@ function MethodologyCard({
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function Home() {
-  const [historyData, setHistoryData] = useState<any[]>([]);
-  const [latestData, setLatestData] = useState<any>(null);
+  const [historyData, setHistoryData] = useState<WeekData[]>([]);
+  const [latestData, setLatestData] = useState<WeekData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -128,7 +129,7 @@ export default function Home() {
           setHistoryData(json);
           setLatestData(json[json.length - 1]);
         }
-      } catch (err) {
+      } catch {
         setError("Could not load data.");
       } finally {
         setIsLoading(false);
