@@ -2,6 +2,8 @@
 
 [![Weekly Data Update](https://github.com/gkv856/will-ai-bubble-burst-soon/actions/workflows/update-data.yml/badge.svg)](https://github.com/gkv856/will-ai-bubble-burst-soon/actions/workflows/update-data.yml)
 
+🔗 **[Live Dashboard](https://will-ai-bubble-burst-soon.vercel.app/)**
+
 An automated, data-driven dashboard tracking macroeconomic signals to determine if the AI investment cycle is in bubble territory. 
 
 ![Dashboard View 1](data/SS1.png)
@@ -78,6 +80,17 @@ You can run this entire stack for free:
 - **Hosting**: GitHub Pages, Vercel, or Netlify can host the Next.js static export.
 
 To automate, set your `FRED_API_KEY` as a GitHub Repository Secret and configure an Actions workflow to run the pipeline, commit `history.json`, and trigger a frontend build.
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repo and clone your fork.
+2. Follow the [Setup & Installation](#-setup--installation) steps above to get the pipeline and dashboard running locally.
+3. Create a branch for your change: `git checkout -b feat/your-feature`.
+4. Commit your changes and open a pull request describing what you changed and why.
+
+For bigger changes (new factors, scoring methodology, data sources), please open an issue first to discuss the approach.
 
 ## ⚠️ Disclaimer
 

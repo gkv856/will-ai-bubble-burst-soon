@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { FactorCard } from "@/components/dashboard/FactorCard";
 import { CompositeScore } from "@/components/dashboard/CompositeScore";
 import { HistoryChart } from "@/components/dashboard/HistoryChart";
+import { EmailSignup } from "@/components/dashboard/EmailSignup";
 import type { WeekData } from "@/lib/types";
 import {
   Activity,
@@ -386,6 +387,11 @@ export default function Home() {
 
         {/* Math deep-dive */}
         <MathBreakdown latestData={latestData} />
+
+        <div className="section-divider" />
+
+        {/* Email signup */}
+        <EmailSignup />
       </main>
 
       {/* ── FOOTER ────────────────────────────────────────────────────── */}
