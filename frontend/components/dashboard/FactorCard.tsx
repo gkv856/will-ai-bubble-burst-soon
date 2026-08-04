@@ -54,11 +54,26 @@ export function FactorCard({ title, score, id, desc }: FactorCardProps) {
   const colorClass = score !== null ? getColorClass(score) : "text-white/20";
   const riskLabel = score !== null ? getRiskLabel(score) : null;
 
+  const jumpToDetail = () => {
+    const target = document.getElementById(`factor-${id}`);
+    if (!target) return;
+    window.dispatchEvent(new CustomEvent("open-factor-detail", { detail: id }));
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
     <div
-      className="glass-card rounded-xl p-5 cursor-default group h-full"
-      role="region"
-      aria-label={`${title}: ${score ?? 'loading'} percent risk`}
+      className="glass-card rounded-xl p-5 cursor-pointer group h-full transition-colors duration-200 hover:border-white/20"
+      role="button"
+      tabIndex={0}
+      onClick={jumpToDetail}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          jumpToDetail();
+        }
+      }}
+      aria-label={`${title}: ${score ?? 'loading'} percent risk. View full explanation.`}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">

@@ -27,7 +27,7 @@ const MathBreakdown = dynamic(
 const TICKER_ITEMS = [
   { label: "GPU (RTX 4090)", key: "gpu" },
   { label: "Credit Spreads", key: "credit" },
-  { label: "Energy Permits", key: "energy" },
+  { label: "Energy Costs", key: "energy" },
   { label: "Demand Ratio", key: "demand" },
   { label: "Data Wall", key: "datawall" },
   { label: "ERP Valuation", key: "valuation" },
@@ -283,10 +283,10 @@ export default function Home() {
               desc="Investment-grade bond spread (BAMLC0A0CM) from FRED."
             />
             <FactorCard
-              title="Energy Permits"
+              title="Energy Costs"
               score={latestData?.factors?.energy ?? null}
               id="energy"
-              desc="Proxy for new data centre build-out velocity."
+              desc="US retail electricity price (FRED) — grid strain from AI data-centre power demand."
             />
             <FactorCard
               title="Demand Reality"
@@ -304,7 +304,7 @@ export default function Home() {
               title="ERP Valuation"
               score={latestData?.factors?.valuation ?? null}
               id="valuation"
-              desc="Equity risk premium indicating overvaluation signals."
+              desc="S&P 500 earnings yield vs. the 10-year Treasury yield."
             />
             <FactorCard
               title="Retail FOMO"
@@ -376,9 +376,9 @@ export default function Home() {
             />
             <MethodologyCard
               id="F8"
-              title="Energy Permits"
+              title="Energy Costs"
               weight="5%"
-              desc="Proxy for real capital commitment to AI infrastructure buildout."
+              desc="Rising electricity prices signal the grid straining to keep up with AI data-centre power demand."
             />
           </div>
         </div>
@@ -398,7 +398,7 @@ export default function Home() {
       <footer className="border-t border-white/[0.06] py-8 px-6 text-center">
         <p className="text-xs font-mono text-white/20">
           Not financial advice. Data sourced from FRED, Yahoo Finance, Vast.ai,
-          and Google Trends.
+          Google Trends, and Epoch AI.
           <span className="mx-2 opacity-40">·</span>
           <a
             href="https://github.com/gkv856/ai-bubble-tracker"

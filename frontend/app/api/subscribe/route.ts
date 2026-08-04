@@ -22,7 +22,8 @@ export async function POST(request: Request) {
     }
 
     if (!error) {
-      await sendWelcomeEmail(email).catch(() => {});
+      const siteUrl = `${new URL(request.url).origin}/`;
+      await sendWelcomeEmail(email, siteUrl).catch(() => {});
     }
 
     return NextResponse.json({ ok: true });

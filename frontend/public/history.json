@@ -16,17 +16,17 @@
   },
   {
     "weekId": "2026-W32",
-    "timestamp": 1785825021,
+    "timestamp": 1785826239,
     "factors": {
       "gpu": 0,
       "credit": 0,
-      "energy": 40,
+      "energy": 68,
       "demand": 100,
       "datawall": 100,
-      "valuation": 65,
+      "valuation": 100,
       "behavioral": 0,
       "liquidity": 0
     },
-    "score": 40
+    "score": 48
   }
 ]

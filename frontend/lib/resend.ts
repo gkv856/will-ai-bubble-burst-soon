@@ -1,16 +1,14 @@
 import { Resend } from "resend";
 
-const SITE_URL = "https://will-ai-bubble-burst-soon.vercel.app/";
-
 function scoreColor(score: number) {
   if (score < 40) return "#10B981";
   if (score < 70) return "#F59E0B";
   return "#EF4444";
 }
 
-async function getLatestScore(): Promise<number | null> {
+async function getLatestScore(siteUrl: string): Promise<number | null> {
   try {
-    const res = await fetch(`${SITE_URL}history.json`, { cache: "no-store" });
+    const res = await fetch(`${siteUrl}history.json`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     const score = Array.isArray(data) ? data[data.length - 1]?.score : null;
@@ -20,7 +18,7 @@ async function getLatestScore(): Promise<number | null> {
   }
 }
 
-function welcomeEmailHtml(score: number | null) {
+function welcomeEmailHtml(score: number | null, siteUrl: string) {
   const pct = score !== null ? Math.max(0, Math.min(100, score)) : null;
   const markerRow =
     pct !== null
@@ -108,7 +106,7 @@ function welcomeEmailHtml(score: number | null) {
               <table role="presentation" cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background-color:#DC2626;border-radius:8px;">
-                    <a href="${SITE_URL}" style="display:inline-block;padding:13px 28px;font-size:14px;font-weight:600;color:#FFFFFF;text-decoration:none;">View Live Dashboard →</a>
+                    <a href="${siteUrl}" style="display:inline-block;padding:13px 28px;font-size:14px;font-weight:600;color:#FFFFFF;text-decoration:none;">View Live Dashboard →</a>
                   </td>
                 </tr>
               </table>
@@ -150,18 +148,18 @@ function welcomeEmailHtml(score: number | null) {
 
 // Best-effort welcome email — subscription still succeeds if this fails
 // or if Resend isn't configured yet.
-export async function sendWelcomeEmail(email: string) {
+export async function sendWelcomeEmail(email: string, siteUrl: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM_EMAIL;
   if (!apiKey || !from) return;
 
-  const score = await getLatestScore();
+  const score = await getLatestScore(siteUrl);
 
   const resend = new Resend(apiKey);
   await resend.emails.send({
     from: `AI Bubble <${from}>`,
     to: email,
     subject: "You're on the alert list — AI Bubble Tracker",
-    html: welcomeEmailHtml(score),
+    html: welcomeEmailHtml(score, siteUrl),
   });
 }

@@ -81,24 +81,22 @@ const FACTORS: FactorExplain[] = [
     title: "ERP Valuation",
     weight: 20,
     emoji: "💰",
-    oneLiner: "Are AI stock prices just... too high?",
+    oneLiner: "Are stock prices leaving any cushion for risk, or none at all?",
     equation: {
-      result: "Risk Score",
+      result: "ERP",
       kind: "expression",
-      expression: "Analyst estimate (0–100)",
-      caption: "Updated manually each week based on Shiller CAPE research",
+      expression: "S&P 500 earnings yield − 10Y Treasury yield",
+      unit: "%",
+      caption: "ERP ≥ 4% → 0% risk   ·   ERP ≤ 0% → 100% risk",
     },
     whatWeWatch:
-      "We track something called the Equity Risk Premium — basically, how much extra reward investors are getting for taking on the risk of holding stocks versus just putting money in a savings account.",
+      "Every week we pull the S&P 500's trailing earnings yield — the inverse of its P/E ratio, via the SPY ETF — and the 10-year US Treasury yield from the Federal Reserve. Subtracting the treasury yield from the earnings yield gives the Equity Risk Premium (ERP): the extra return investors are getting for holding riskier stocks instead of a safe government bond.",
     whyItMatters:
-      "If stocks barely pay more than a savings account, that means investors have gotten so excited about AI that they've bid prices up to silly levels. History says when this gap closes to near-zero, markets are dangerously overvalued. The 2000 dot-com crash happened when this exact thing occurred.",
+      "If stocks barely pay more than a 'risk-free' bond — or pay less — that means investors have gotten so excited about AI that they've bid prices up to silly levels. History says when this gap closes to zero or goes negative, markets are dangerously overvalued. The 2000 dot-com crash happened when this exact thing occurred.",
     howWeScore:
-      "This one we currently set by hand each week based on analyst research, on a scale of 0–100. Right now it's sitting at 65 — elevated, definitely worth watching, but not screaming maximum danger yet.",
+      "ERP at 4% or above = stocks offer a healthy cushion over bonds, 0 risk. ERP at 0% or below = stocks pay no premium at all for the extra risk, 100 risk. Linear in between.",
     example:
-      "Imagine savings accounts pay 5%. If AI stocks only offer 5.5% expected return — that tiny gap for taking on way more risk — that's a red flag. You'd want at least 8–10% extra to justify the risk.",
-    isEstimate: true,
-    estimateNote:
-      "We're working on connecting this to a live data source. For now, it's updated manually each week based on financial research.",
+      "Right now the S&P 500's trailing P/E is around 27, an earnings yield of roughly 3.7%. The 10-year Treasury yields about 4.75%. That's a −1% ERP — stocks are priced to return less than a boring government bond, which is why this factor is reading near maximum risk.",
   },
   {
     id: "behavioral",
@@ -192,48 +190,44 @@ const FACTORS: FactorExplain[] = [
     title: "Data Wall",
     weight: 5,
     emoji: "🧱",
-    oneLiner: "Are AI companies running out of data to train on?",
+    oneLiner: "Has AI training-compute scaling stalled out?",
     equation: {
       result: "Risk Score",
       kind: "expression",
-      expression: "Analyst estimate (0–100)",
-      caption: "Currently set to 50 — a real concern, not yet a crisis",
+      expression: "ΔOOM(max training FLOP), this year vs. last year",
+      caption: "growth ≥ 1 order of magnitude/yr → 0% risk   ·   growth ≤ 0 (no new record) → 100% risk",
     },
     whatWeWatch:
-      "This one doesn't have a live data feed yet, so we estimate it each week. The 'data wall' is the idea that AI models need vast amounts of text, images, and code to learn from — and we might be approaching the limits of what's available on the internet.",
+      "Every week we pull Epoch AI's public dataset of 1,000+ notable AI models, tracking the training compute (in FLOP) disclosed for each one all the way back to the 1950s. We take the highest compute figure ever disclosed as of today and compare it to the highest figure disclosed exactly one year ago.",
     whyItMatters:
-      "The whole AI bull case assumes models will keep getting smarter every year. If they hit a ceiling because there's no new data to train on, the multi-trillion-dollar bet that AI will transform every industry starts to look shaky. That could pop the bubble.",
+      "For years, AI capability gains came largely from throwing ~10x more compute at bigger models every year. If that scaling curve flattens — if nobody's beaten last year's record — it means labs have hit a wall on cost, chips, or data. That's exactly the scenario that could stall the capability gains Wall Street has priced in.",
     howWeScore:
-      "0 means no concern at all, 100 means a severe data scarcity crisis. Currently set to 50 — a real concern, but not yet a crisis.",
+      "We measure the change in orders of magnitude (powers of 10) between this year's record and last year's record. A full order of magnitude of growth (10x, the historical pace) or more scores 0 risk. Zero growth — nobody beat last year's record — scores 100 risk. Linear in between.",
     example:
-      "Think of it like a student who has read every book in the library. What do they study next? Right now, labs are using synthetic data and other tricks — but it's an open question how long that works.",
-    isEstimate: true,
-    estimateNote:
-      "No live data source for this yet. Updated manually each week. We're looking into connecting it to real metrics like Common Crawl dataset growth rates.",
+      "If the biggest disclosed model a year ago used 5×10²⁵ FLOP, and today's biggest is 5×10²⁶ FLOP, that's a full 10x jump — 0 risk. Right now the record hasn't budged in over a year, which is why this factor is reading 100.",
   },
   {
     id: "energy",
-    title: "Energy Permits",
+    title: "Energy Costs",
     weight: 5,
     emoji: "⚡",
-    oneLiner: "Are companies actually building the AI infrastructure, or just talking about it?",
+    oneLiner: "Is the power grid straining to feed AI data centres?",
     equation: {
-      result: "Risk Score",
-      kind: "expression",
-      expression: "Analyst estimate (0–100)",
-      caption: "Currently set to 40 — below the worry zone",
+      result: "price",
+      kind: "fraction",
+      numerator: { value: "$/kWh", label: "US retail electricity price" },
+      denominator: { value: "FRED", label: "APU000072610, monthly" },
+      unit: "$/kWh",
+      caption: "price ≤ $0.15/kWh → 0% risk   ·   price ≥ $0.22/kWh → 100% risk",
     },
     whatWeWatch:
-      "AI data centres are power-hungry — a single large data centre can use as much electricity as a small city. We track how aggressively companies are applying for new power grid connections to build data centres.",
+      "AI data centres are power-hungry — a single large one can use as much electricity as a small city. We pull the average US retail electricity price (cents per kilowatt-hour) from the Federal Reserve every week.",
     whyItMatters:
-      "Permit applications are a real-world commitment. You don't go through the expensive, years-long process of getting grid connections approved unless you genuinely plan to build. High permit activity confirms the AI buildout is real. A slowdown would suggest the spending boom is losing momentum.",
+      "Electricity prices climbing faster than normal is a real-world sign that AI's power appetite is outpacing what the grid can comfortably supply. That pressure eventually shows up as higher operating costs for AI companies and public pushback on new data centres — both of which can slow the buildout.",
     howWeScore:
-      "0 means slow permitting — we question whether the buildout is real. 100 means overheated construction frenzy. Currently set at 40 — below the worry zone.",
+      "Price at $0.15/kWh or below = grid has slack, 0 risk. Price at $0.22/kWh or above = real strain, 100 risk. Linear in between.",
     example:
-      "Think of it like building permits for a new neighbourhood. If everyone's talking about housing but nobody's filing permits, those houses aren't getting built. Same logic here.",
-    isEstimate: true,
-    estimateNote:
-      "No live data source yet. Updated manually. We're working on integrating EIA and FERC grid connection data.",
+      "The average US price was about $0.14/kWh in late 2021 and has climbed to roughly $0.20/kWh now — that's already more than halfway to the danger threshold, which is why this factor is elevated.",
   },
 ];
 
@@ -243,7 +237,7 @@ const FACTORS: FactorExplain[] = [
 const HOW_IT_WORKS = [
   {
     title: "Step 1 — We fetch real data",
-    body: "Each week, the pipeline automatically pulls live numbers from sources like the US Federal Reserve, Yahoo Finance, Google Trends, and the Vast.ai GPU marketplace. Some signals we don't have a live feed for yet, so we estimate those by hand.",
+    body: "Each week, the pipeline automatically pulls live numbers from sources like the US Federal Reserve, Yahoo Finance, Google Trends, the Vast.ai GPU marketplace, and Epoch AI's model dataset. All eight signals are fetched live — nothing is hand-estimated.",
   },
   {
     title: "Step 2 — We convert each signal into a 0–100 risk score",
@@ -376,8 +370,20 @@ function FactorCard({ f }: { f: FactorExplain }) {
   const [open, setOpen] = useState(false);
   const panelId = useId();
 
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const targetId = (e as CustomEvent<string>).detail;
+      if (targetId === f.id) setOpen(true);
+    };
+    window.addEventListener("open-factor-detail", handler);
+    return () => window.removeEventListener("open-factor-detail", handler);
+  }, [f.id]);
+
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.015] overflow-hidden transition-colors duration-200 hover:border-white/[0.12]">
+    <div
+      id={`factor-${f.id}`}
+      className="rounded-2xl border border-white/[0.07] bg-white/[0.015] overflow-hidden transition-colors duration-200 hover:border-white/[0.12] scroll-mt-24"
+    >
       {/* Trigger */}
       <button
         className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-blue-500/40"
@@ -460,7 +466,7 @@ const FACTOR_META: { id: string; label: string; weight: number }[] = [
   { id: "gpu",        label: "GPU Spot Prices",  weight: 10 },
   { id: "credit",     label: "Credit Spreads",   weight: 10 },
   { id: "datawall",   label: "Data Wall",        weight:  5 },
-  { id: "energy",     label: "Energy Permits",   weight:  5 },
+  { id: "energy",     label: "Energy Costs",     weight:  5 },
 ];
 
 function barColor(score: number) {
