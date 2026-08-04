@@ -4,32 +4,32 @@
 
 🔗 **[Live Dashboard](https://will-ai-bubble-burst-soon.vercel.app/)**
 
-An automated, data-driven dashboard tracking macroeconomic signals to determine if the AI investment cycle is in bubble territory. 
+An automated, data-driven dashboard tracking macroeconomic signals to determine if the AI investment cycle is in bubble territory.
 
 ![Dashboard View 1](data/SS1.png)
 ![Dashboard View 2](data/SS2.png)
 ![Dashboard View 3](data/SS3.png)
 
-This project pulls data from public APIs to calculate a 0-100 composite risk score based on 8 key factors. It features a zero-cost data collection pipeline and a premium, dark-mode Next.js dashboard.
+This project pulls data from public APIs to calculate a 0-100 composite risk score based on 8 key factors — all backed by live data sources, refreshed automatically every week by GitHub Actions. It features a zero-cost data collection pipeline and a premium, dark-mode Next.js dashboard.
 
 ## 📊 The 8 Macro Signals
 
 The composite risk score is built by weighting the following factors:
 
-1. **Demand Reality (20%)**: IGV/SMH ETF ratio — measures if software demand is keeping pace with hardware speculation.
-2. **ERP Valuation (20%)**: Equity Risk Premium — indicates if broader markets are pricing in an implausible future.
-3. **Retail FOMO (15%)**: Google Trends for "Nvidia options" + "AI investing" — tracks speculative euphoria.
+1. **Demand Reality (20%)**: IGV/SMH ETF ratio (Yahoo Finance) — measures if software demand is keeping pace with hardware speculation.
+2. **ERP Valuation (20%)**: S&P 500 earnings yield minus the 10-year Treasury yield (Yahoo Finance + FRED) — a compressed or negative premium signals markets pricing in an implausible future.
+3. **Retail FOMO (15%)**: Google Trends for "Nvidia options" + "AI investing" via SerpApi — tracks speculative euphoria.
 4. **M2 Liquidity (15%)**: US money supply from FRED — tracks the fuel for risk asset rallies.
 5. **GPU Spot Prices (10%)**: RTX 4090 rental cost on Vast.ai — signals real compute demand vs supply gluts.
-6. **Credit Spreads (10%)**: Corporate bond spreads — gauges macro stress and lending appetite for capital expenditures.
-7. **Energy Permits (5%)**: Proxy for real capital commitment to AI infrastructure buildout.
-8. **Data Wall (5%)**: Risk from AI training data exhaustion.
+6. **Credit Spreads (10%)**: Corporate bond spreads from FRED — gauges macro stress and lending appetite for capital expenditures.
+7. **Energy Costs (5%)**: US retail electricity price from FRED — rising prices signal the grid straining to feed AI data centres.
+8. **Data Wall (5%)**: Year-over-year growth in the highest disclosed AI training compute (Epoch AI) — flat or negative growth signals scaling has stalled.
 
 ## 🏗️ Architecture
 
-- **Pipeline (`pipeline.py`)**: A Python script that fetches data from Yahoo Finance, FRED, Pytrends, and Vast.ai, normalizes the data into 0-100 risk scores, and outputs `history.json`.
+- **Pipeline (`backend/`)**: A modular Python package (`backend/pipeline/`) — one module per factor under `factors/`, shared FRED/scoring helpers under `clients/` and `core/`, and an `orchestrator.py` that composes all 8 scores into a weekly `history.json` entry. Entry point is `backend/main.py`.
 - **Dashboard (`frontend/`)**: A Next.js (React) application styled with Tailwind CSS, utilizing Recharts for data visualization and Lucide-react for iconography.
-- **Automation**: Designed to run automatically via GitHub Actions (or local cron jobs) at zero cost.
+- **Automation (`.github/workflows/update-data.yml`)**: A GitHub Actions workflow runs the pipeline every Wednesday at 9:00 AM IST (and can be triggered manually), commits the refreshed `history.json`, and pushes it — which triggers Vercel to redeploy. Runs entirely on GitHub's servers; no local machine or scheduler needs to stay on.
 
 ## 🚀 Setup & Installation
 
@@ -38,7 +38,7 @@ The composite risk score is built by weighting the following factors:
 1. Clone the repository.
    ```bash
    git clone https://github.com/gkv856/will-ai-bubble-burst-soon.git
-   cd will-ai-bubble-burst-soon
+   cd will-ai-bubble-burst-soon/backend
    ```
 2. Create a virtual environment and install dependencies:
    ```bash
@@ -46,16 +46,19 @@ The composite risk score is built by weighting the following factors:
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
-3. Get a free API key from [FRED](https://fred.stlouisfed.org/docs/api/api_key.html).
-4. Create a `.env` file in the root directory and add your key: 
+3. Get free API keys:
+   - [FRED](https://fred.stlouisfed.org/docs/api/api_key.html) (credit spreads, liquidity, energy, valuation)
+   - [SerpApi](https://serpapi.com/) (Google Trends / retail FOMO)
+4. Copy `.env.example` to `.env` in `backend/` and fill in your keys:
    ```
    FRED_API_KEY=your_key_here
+   SERPAPI_KEY=your_key_here
    ```
 5. Run the pipeline to generate `history.json`:
    ```bash
-   python pipeline.py
+   python main.py
    ```
-   *(Note: Move the generated `history.json` to `frontend/public/` if running locally for the dashboard).*
+   This writes directly to `frontend/public/history.json` and commits + pushes it. Pass `--no-push` to update the file locally without committing/pushing (useful while testing changes to a factor).
 
 ### 2. Dashboard Setup (Next.js)
 
@@ -75,11 +78,11 @@ The composite risk score is built by weighting the following factors:
 
 ## ⚙️ Zero-Cost Automation
 
-You can run this entire stack for free:
-- **Data Collection**: GitHub Actions can run `pipeline.py` weekly.
-- **Hosting**: GitHub Pages, Vercel, or Netlify can host the Next.js static export.
+The entire stack runs for free:
+- **Data Collection**: `.github/workflows/update-data.yml` runs the pipeline weekly on GitHub's own runners — no server or laptop uptime required.
+- **Hosting**: Vercel hosts the Next.js dashboard and redeploys automatically whenever the workflow pushes a new `history.json`.
 
-To automate, set your `FRED_API_KEY` as a GitHub Repository Secret and configure an Actions workflow to run the pipeline, commit `history.json`, and trigger a frontend build.
+To enable it on your own fork, add `FRED_API_KEY` and `SERPAPI_KEY` as Actions secrets (repo **Settings → Secrets and variables → Actions**). The workflow already has `contents: write` permission to commit and push using the built-in `GITHUB_TOKEN` — no personal access token needed.
 
 ## 🤝 Contributing
 
@@ -94,4 +97,4 @@ For bigger changes (new factors, scoring methodology, data sources), please open
 
 ## ⚠️ Disclaimer
 
-Not financial advice. Educational purposes only. Data sourced from FRED, Yahoo Finance, Vast.ai, and Google Trends.
+Not financial advice. Educational purposes only. Data sourced from FRED, Yahoo Finance, Vast.ai, Google Trends, and Epoch AI.
