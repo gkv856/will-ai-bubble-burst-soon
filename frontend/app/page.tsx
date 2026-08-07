@@ -1,27 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
-import { FactorCard } from "@/components/dashboard/FactorCard";
+import Link from "next/link";
 import { CompositeScore } from "@/components/dashboard/CompositeScore";
 import { HistoryChart } from "@/components/dashboard/HistoryChart";
-import { EmailSignup } from "@/components/dashboard/EmailSignup";
+import { entryLabel } from "@/lib/types";
 import type { WeekData } from "@/lib/types";
 import {
   Activity,
   GitBranch,
   RefreshCw,
-  TrendingUp,
   AlertTriangle,
   CheckCircle,
+  ArrowRight,
 } from "lucide-react";
 
-// Lazy-load the heavy math section — code-split per Next.js best practice
-const MathBreakdown = dynamic(
-  () =>
-    import("@/components/dashboard/MathBreakdown").then((m) => m.MathBreakdown),
-  { ssr: false },
-);
+function getStatusColor(score: number) {
+  if (score < 40) return "#10b981";
+  if (score < 70) return "#f59e0b";
+  return "#ef4444";
+}
+
+const StatusIcon = ({ score }: { score: number | null }) => {
+  if (score === null)
+    return <Activity className="w-4 h-4 text-blue-400 animate-pulse" />;
+  if (score < 40) return <CheckCircle className="w-4 h-4 text-emerald-400" />;
+  if (score < 70) return <AlertTriangle className="w-4 h-4 text-yellow-400" />;
+  return <AlertTriangle className="w-4 h-4 text-red-400" />;
+};
 
 // ── Ticker items ──────────────────────────────────────────────────────────────
 const TICKER_ITEMS = [
@@ -32,26 +38,11 @@ const TICKER_ITEMS = [
   { label: "Data Wall", key: "datawall" },
   { label: "ERP Valuation", key: "valuation" },
   { label: "Retail FOMO", key: "behavioral" },
-  { label: "M2 Liquidity", key: "liquidity" },
+  { label: "Liquidity", key: "liquidity" },
 ];
 
-function getStatusColor(score: number) {
-  if (score < 40) return "#10b981";
-  if (score < 70) return "#f59e0b";
-  return "#ef4444";
-}
-
-function StatusIcon({ score }: { score: number | null }) {
-  if (score === null)
-    return <Activity className="w-4 h-4 text-blue-400 animate-pulse" />;
-  if (score < 40) return <CheckCircle className="w-4 h-4 text-emerald-400" />;
-  if (score < 70) return <AlertTriangle className="w-4 h-4 text-yellow-400" />;
-  return <AlertTriangle className="w-4 h-4 text-red-400" />;
-}
-
-// ── Ticker bar ────────────────────────────────────────────────────────────────
-function TickerBar({ factors }: { factors: Record<string, number> | null }) {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS]; // duplicate for seamless loop
+const TickerBar = ({ factors }: { factors: Record<string, number> | null }) => {
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
   return (
     <div
       className="border-y border-white/[0.06] bg-white/[0.015] overflow-hidden py-2"
@@ -66,10 +57,7 @@ function TickerBar({ factors }: { factors: Record<string, number> | null }) {
               key={i}
               className="flex items-center gap-2 px-6 text-xs font-mono whitespace-nowrap"
             >
-              <span
-                className="w-1.5 h-1.5 rounded-full"
-                style={{ backgroundColor: color }}
-              />
+              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
               <span className="text-slate-400">{item.label}</span>
               <span className="font-semibold" style={{ color }}>
                 {val !== null ? `${val}%` : "--"}
@@ -81,37 +69,7 @@ function TickerBar({ factors }: { factors: Record<string, number> | null }) {
       </div>
     </div>
   );
-}
-
-// ── Methodology section ───────────────────────────────────────────────────────
-function MethodologyCard({
-  id,
-  title,
-  desc,
-  weight,
-}: {
-  id: string;
-  title: string;
-  desc: string;
-  weight: string;
-}) {
-  return (
-    <div className="glass-card rounded-xl p-4 cursor-default">
-      <div className="flex items-start justify-between gap-3 mb-2">
-        <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">
-          {id}
-        </span>
-        <span className="text-xs font-mono text-white/30 shrink-0">
-          {weight}
-        </span>
-      </div>
-      <p className="text-sm font-semibold text-white/90 mb-1 font-mono">
-        {title}
-      </p>
-      <p className="text-xs text-white/40 leading-relaxed">{desc}</p>
-    </div>
-  );
-}
+};
 
 // ── Main page ─────────────────────────────────────────────────────────────────
 export default function Home() {
@@ -173,21 +131,31 @@ export default function Home() {
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-mono">
-          <StatusIcon score={compositeScore} />
-          <span className="text-white/40">{latestData?.weekId ?? "—"}</span>
-        </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 text-xs font-mono">
+            <StatusIcon score={compositeScore} />
+            <span className="text-white/40">{latestData ? entryLabel(latestData) : "—"}</span>
+          </div>
 
-        <a
-          href="https://github.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white transition-colors duration-200 cursor-pointer"
-          aria-label="View source on GitHub"
-        >
-          <GitBranch className="w-4 h-4" />
-          <span className="hidden sm:block">Source</span>
-        </a>
+          <Link
+            href="/details"
+            className="flex items-center gap-1.5 text-xs font-mono text-white/50 hover:text-white transition-colors duration-200 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20"
+          >
+            Details
+            <ArrowRight className="w-3 h-3" />
+          </Link>
+
+          <a
+            href="https://github.com/gkv856/will-ai-bubble-burst-soon"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs text-white/50 hover:text-white transition-colors duration-200 cursor-pointer"
+            aria-label="View source on GitHub"
+          >
+            <GitBranch className="w-4 h-4" />
+            <span className="hidden sm:block">Source</span>
+          </a>
+        </div>
       </header>
 
       {/* ── TICKER ────────────────────────────────────────────────────── */}
@@ -199,7 +167,7 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-16 pb-10 text-center animate-fade-up">
         <div className="inline-flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/50 mb-8">
           <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-          Updated weekly · 8 macro signals
+          Updated daily · 8 macro signals · AI analysis
         </div>
 
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-6 leading-[1.05]">
@@ -210,7 +178,7 @@ export default function Home() {
 
         <p className="text-white/50 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
           A data-driven composite risk score built from GPU prices, credit
-          spreads, retail FOMO, liquidity, and more — refreshed every week.
+          spreads, retail FOMO, liquidity, and more — refreshed every trading day.
         </p>
 
         {/* ── Score pill ── */}
@@ -253,145 +221,41 @@ export default function Home() {
 
       <div className="section-divider mx-6 mb-12" />
 
-      {/* ── MAIN DASHBOARD ────────────────────────────────────────────── */}
+      {/* ── MAIN CONTENT ──────────────────────────────────────────────── */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 space-y-10">
-        {/* Gauge + Chart row */}
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
-          <CompositeScore score={compositeScore} />
-          <HistoryChart historyData={historyData} />
+        {/* Gauge + Chart */}
+        <CompositeScore score={compositeScore} />
+        <HistoryChart historyData={historyData} />
+
+        {/* AI Analysis card */}
+        {latestData?.aiAnalysis && latestData.aiAnalysis !== "AI analysis unavailable." && (
+          <div className="glass-card rounded-2xl p-6 border border-blue-500/10">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-base">✨</span>
+              <span className="text-xs font-mono font-semibold text-blue-400 uppercase tracking-widest">
+                AI Analysis
+              </span>
+              <span className="ml-auto text-[10px] font-mono text-white/20">
+                Gemini Flash · {latestData ? entryLabel(latestData) : ""}
+              </span>
+            </div>
+            <p className="text-sm text-white/70 leading-relaxed font-mono">
+              {latestData.aiAnalysis}
+            </p>
+          </div>
+        )}
+
+        {/* CTA to details page */}
+        <div className="flex justify-center pt-4">
+          <Link
+            href="/details"
+            id="details-cta-btn"
+            className="group flex items-center gap-2 px-6 py-3 rounded-xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] hover:border-white/20 text-sm font-mono text-white/60 hover:text-white/90 transition-all duration-200"
+          >
+            View signal breakdown, methodology &amp; math
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
         </div>
-
-        {/* Factor grid */}
-        <div>
-          <div className="flex items-center gap-2 mb-5">
-            <TrendingUp className="w-4 h-4 text-blue-400" />
-            <h2 className="text-sm font-mono font-semibold text-white/60 uppercase tracking-widest">
-              Signal Breakdown
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            <FactorCard
-              title="GPU Spot Prices"
-              score={latestData?.factors?.gpu ?? null}
-              id="gpu"
-              desc="RTX 4090 rental cost on Vast.ai vs historical baseline."
-            />
-            <FactorCard
-              title="Credit Spreads"
-              score={latestData?.factors?.credit ?? null}
-              id="credit"
-              desc="Investment-grade bond spread (BAMLC0A0CM) from FRED."
-            />
-            <FactorCard
-              title="Energy Costs"
-              score={latestData?.factors?.energy ?? null}
-              id="energy"
-              desc="US retail electricity price (FRED) — grid strain from AI data-centre power demand."
-            />
-            <FactorCard
-              title="Demand Reality"
-              score={latestData?.factors?.demand ?? null}
-              id="demand"
-              desc="IGV/SMH ratio — software demand vs. hardware speculation."
-            />
-            <FactorCard
-              title="Data Wall"
-              score={latestData?.factors?.datawall ?? null}
-              id="datawall"
-              desc="Risk from AI training data exhaustion."
-            />
-            <FactorCard
-              title="ERP Valuation"
-              score={latestData?.factors?.valuation ?? null}
-              id="valuation"
-              desc="S&P 500 earnings yield vs. the 10-year Treasury yield."
-            />
-            <FactorCard
-              title="Retail FOMO"
-              score={latestData?.factors?.behavioral ?? null}
-              id="behavioral"
-              desc='Google Trends for "Nvidia options" + "AI investing".'
-            />
-            <FactorCard
-              title="M2 Liquidity"
-              score={latestData?.factors?.liquidity ?? null}
-              id="liquidity"
-              desc="US money supply from FRED — fuelling or deflating the rally."
-            />
-          </div>
-        </div>
-
-        <div className="section-divider" />
-
-        {/* Methodology */}
-        <div>
-          <div className="flex items-center gap-2 mb-5">
-            <Activity className="w-4 h-4 text-blue-400" />
-            <h2 className="text-sm font-mono font-semibold text-white/60 uppercase tracking-widest">
-              Methodology
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            <MethodologyCard
-              id="F1"
-              title="GPU Spot Prices"
-              weight="10%"
-              desc="High GPU rental cost signals over-investment and speculative demand in AI compute."
-            />
-            <MethodologyCard
-              id="F2"
-              title="Credit Spreads"
-              weight="10%"
-              desc="Widening spreads signal macro stress; tightening enables continued AI spending."
-            />
-            <MethodologyCard
-              id="F3"
-              title="Demand Reality"
-              weight="20%"
-              desc="The IGV/SMH ratio reveals if software demand is keeping up with hardware bets."
-            />
-            <MethodologyCard
-              id="F4"
-              title="ERP Valuation"
-              weight="20%"
-              desc="A compressed equity risk premium signals markets pricing in an implausible future."
-            />
-            <MethodologyCard
-              id="F5"
-              title="Retail FOMO"
-              weight="15%"
-              desc="Retail search intensity tracks speculative euphoria at the top of bubble cycles."
-            />
-            <MethodologyCard
-              id="F6"
-              title="M2 Liquidity"
-              weight="15%"
-              desc="Loose monetary conditions inflate all risk assets including AI stocks."
-            />
-            <MethodologyCard
-              id="F7"
-              title="Data Wall"
-              weight="5%"
-              desc="Training data scarcity could stall model progress, puncturing growth narratives."
-            />
-            <MethodologyCard
-              id="F8"
-              title="Energy Costs"
-              weight="5%"
-              desc="Rising electricity prices signal the grid straining to keep up with AI data-centre power demand."
-            />
-          </div>
-        </div>
-
-        <div className="section-divider" />
-
-        {/* Math deep-dive */}
-        <MathBreakdown latestData={latestData} />
-
-        <div className="section-divider" />
-
-        {/* Email signup */}
-        <EmailSignup />
       </main>
 
       {/* ── FOOTER ────────────────────────────────────────────────────── */}
@@ -401,7 +265,7 @@ export default function Home() {
           Google Trends, and Epoch AI.
           <span className="mx-2 opacity-40">·</span>
           <a
-            href="https://github.com/gkv856/ai-bubble-tracker"
+            href="https://github.com/gkv856/will-ai-bubble-burst-soon"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 hover:text-white/60 transition-colors"

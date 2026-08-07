@@ -1,9 +1,9 @@
-name: Weekly Data Update
+name: Daily Data Update
 
 on:
   schedule:
-    # 09:00 IST every Wednesday = 03:30 UTC (IST is UTC+5:30)
-    - cron: "30 3 * * 3"
+    # 09:00 IST Mon-Fri = 03:30 UTC (IST is UTC+5:30)
+    - cron: "30 3 * * 1-5"
   workflow_dispatch: {}
 
 permissions:
@@ -30,9 +30,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Run weekly pipeline
+      - name: Run daily pipeline
         working-directory: backend
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
           SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python main.py
+

@@ -3,6 +3,7 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import type { TooltipContentProps } from "recharts";
 import { TrendingUp } from "lucide-react";
+import { entryLabel } from "@/lib/types";
 import type { WeekData } from "@/lib/types";
 
 interface HistoryChartProps {
@@ -29,7 +30,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
     return (
       <div className="glass-card rounded-2xl p-8 flex flex-col items-center justify-center h-full min-h-[320px]">
         <TrendingUp className="w-8 h-8 text-white/10 mb-3" />
-        <p className="text-xs font-mono text-white/20">No history yet — run the pipeline weekly</p>
+        <p className="text-xs font-mono text-white/20">No history yet — run the pipeline to collect data</p>
       </div>
     );
   }
@@ -47,12 +48,12 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
       <div className="flex items-center gap-2 mb-6">
         <TrendingUp className="w-3.5 h-3.5 text-white/30" aria-hidden="true" />
         <span className="text-xs font-mono text-white/40 uppercase tracking-widest">Historical Trend</span>
-        <span className="ml-auto text-[10px] font-mono text-white/20">{historyData.length} weeks</span>
+        <span className="ml-auto text-[10px] font-mono text-white/20">{historyData.length} data points</span>
       </div>
 
-      <div className="flex-1 min-h-0">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={historyData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+      <div className="flex-1 w-full" style={{ minHeight: 320 }}>
+        <ResponsiveContainer width="100%" height={320}>
+          <LineChart data={historyData.map(d => ({ ...d, label: entryLabel(d) }))} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={lineColor} stopOpacity={0.3} />
@@ -67,7 +68,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
             <ReferenceLine y={40} stroke="rgba(245,158,11,0.2)" strokeDasharray="4 4" label={{ value: "Caution", fill: "rgba(245,158,11,0.4)", fontSize: 9, fontFamily: "Fira Code", position: "right" }} />
 
             <XAxis
-              dataKey="weekId"
+              dataKey="label"
               stroke="transparent"
               tick={{ fill: "rgba(255,255,255,0.2)", fontSize: 9, fontFamily: "Fira Code" }}
               tickLine={false}

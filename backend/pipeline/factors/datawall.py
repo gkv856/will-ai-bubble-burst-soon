@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import io
 
 import numpy as np
@@ -13,8 +14,8 @@ from ..core.scoring import normalize_score, safe_execute
 EPOCH_CSV_URL = "https://epoch.ai/data/notable_ai_models.csv"
 
 
-@safe_execute(default_val=50)
-def get_datawall_risk() -> int:
+def _compute_datawall_score() -> int:
+    """Shared computation for the data wall risk score."""
     response = requests.get(EPOCH_CSV_URL, timeout=30)
     response.raise_for_status()
     models = pd.read_csv(io.BytesIO(response.content))
@@ -41,3 +42,15 @@ def get_datawall_risk() -> int:
     return normalize_score(
         oom_growth_last_year, healthy_baseline=1.0, danger_threshold=0.0
     )
+
+
+@safe_execute(default_val=50)
+def get_datawall_risk() -> int:
+    return _compute_datawall_score()
+
+
+@safe_execute(default_val={})
+def get_datawall_risk_series(days: int = 14) -> dict[str, int]:
+    """Returns today's score only — Epoch AI data updates infrequently."""
+    today = datetime.date.today().isoformat()
+    return {today: _compute_datawall_score()}

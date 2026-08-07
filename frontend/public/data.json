@@ -1,0 +1,227 @@
+[
+  {
+    "dayId": "2026-07-20",
+    "timestamp": 1784505600,
+    "factors": {
+      "demand": 50,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 77,
+      "liquidity": 100,
+      "behavioral": 50,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 63
+  },
+  {
+    "dayId": "2026-07-21",
+    "timestamp": 1784592000,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 84,
+      "liquidity": 100,
+      "behavioral": 50,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 74
+  },
+  {
+    "dayId": "2026-07-22",
+    "timestamp": 1784678400,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 90,
+      "liquidity": 100,
+      "behavioral": 50,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 74
+  },
+  {
+    "dayId": "2026-07-23",
+    "timestamp": 1784764800,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 100,
+      "liquidity": 100,
+      "behavioral": 50,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 75
+  },
+  {
+    "dayId": "2026-07-24",
+    "timestamp": 1784851200,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 100,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 67
+  },
+  {
+    "dayId": "2026-07-27",
+    "timestamp": 1785110400,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 77,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 66
+  },
+  {
+    "dayId": "2026-07-28",
+    "timestamp": 1785196800,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 63,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 65
+  },
+  {
+    "dayId": "2026-07-29",
+    "timestamp": 1785283200,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 84,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 66
+  },
+  {
+    "dayId": "2026-07-30",
+    "timestamp": 1785369600,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 80,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 66
+  },
+  {
+    "dayId": "2026-07-31",
+    "timestamp": 1785456000,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 84,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 66
+  },
+  {
+    "dayId": "2026-08-03",
+    "timestamp": 1785715200,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 67,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 65
+  },
+  {
+    "dayId": "2026-08-04",
+    "timestamp": 1785801600,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 50,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 65
+  },
+  {
+    "dayId": "2026-08-05",
+    "timestamp": 1785888000,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 100,
+      "energy": 50,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 65
+  },
+  {
+    "dayId": "2026-08-06",
+    "timestamp": 1785974400,
+    "factors": {
+      "demand": 100,
+      "credit": 0,
+      "valuation": 50,
+      "energy": 50,
+      "liquidity": 100,
+      "behavioral": 0,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 55
+  },
+  {
+    "dayId": "2026-08-07",
+    "timestamp": 1786060800,
+    "factors": {
+      "demand": 100,
+      "credit": 50,
+      "valuation": 50,
+      "energy": 50,
+      "liquidity": 100,
+      "behavioral": 50,
+      "gpu": 50,
+      "datawall": 50
+    },
+    "score": 67
+  }
+]
