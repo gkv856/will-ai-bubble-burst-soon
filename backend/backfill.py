@@ -1,5 +1,5 @@
 """
-backfill.py - One-time script to populate history.json with daily data.
+backfill.py - One-time script to populate data.json with daily data.
 
 Run from the backend/ directory:
     python backfill.py              # backfill last 14 trading days
@@ -13,7 +13,7 @@ Rate limits respected:
     Epoch AI: CSV download -> 1 call
 
 No --no-push flag here - script always writes locally only.
-Push manually when satisfied: git add frontend/public/history.json && git commit -m "data: backfill daily history"
+Push manually when satisfied: git add frontend/public/data.json && git commit -m "data: backfill daily history"
 """
 from __future__ import annotations
 
@@ -50,7 +50,7 @@ if not FRED_API_KEY or not SERPAPI_KEY:
 
 from pipeline.core.scoring import normalize_score  # noqa: E402
 from pipeline.storage.history import load_history, save_history, upsert_bulk  # noqa: E402
-from pipeline.clients.gemini import get_ai_analysis  # noqa: E402
+from pipeline.clients.gemini import get_ai_predictions  # noqa: E402
 
 # -- Helpers -------------------------------------------------------------------
 
@@ -186,7 +186,7 @@ def main() -> None:
     print(f"  -> {len(entries)} entries built")
 
     # Step 3: merge with existing history (keeps old weekly entries)
-    print("\nMerging with existing history.json...")
+    print("\nMerging with existing data.json...")
     history = load_history()
     old_count = len(history)
     history = upsert_bulk(history, entries)
@@ -194,14 +194,14 @@ def main() -> None:
 
     # Step 4: optional Gemini analysis on the merged history
     if GEMINI_API_KEY:
-        print("\nRequesting AI analysis from Gemini Flash...")
-        ai_text = get_ai_analysis(history)
-        if ai_text and ai_text != "AI analysis unavailable.":
+        print("\nRequesting AI predictions from Gemini 1.5 Pro for the most recent day...")
+        ai_preds = get_ai_predictions(history[-15:])
+        if ai_preds:
             # Attach to the most recent entry
-            history[-1]["aiAnalysis"] = ai_text
-            print(f"  -> Analysis: {ai_text[:120]}...")
+            history[-1]["aiPredictions"] = ai_preds
+            print(f"  -> Generated {len(ai_preds)} category predictions.")
         else:
-            print("  -> AI analysis unavailable (API error or key issue)")
+            print("  -> AI predictions unavailable (API error or key issue)")
     else:
         print("\nSkipping AI analysis (GEMINI_API_KEY not set)")
 
@@ -209,9 +209,9 @@ def main() -> None:
     save_history(history)
     print(f"\n[DONE] Saved {len(history)} entries to {OUTPUT_FILE}")
     print("\nNext steps:")
-    print("  1. Review frontend/public/history.json")
+    print("  1. Review frontend/public/data.json")
     print("  2. Run:  cd frontend && npm run dev  (to verify the dashboard)")
-    print("  3. When happy: git add frontend/public/history.json && git commit -m 'data: backfill daily history' && git push")
+    print("  3. When happy: git add frontend/public/data.json && git commit -m 'data: backfill daily history' && git push")
     print("-" * 60)
 
 

@@ -17,7 +17,7 @@ Waiting 10 weeks to build a trend line was too slow in the fast-moving AI space.
      - M2 money supply → Daily overnight reverse repo (`RRPONTSYD`) for liquidity.
      - Monthly electricity → Daily WTI crude oil (`DCOILWTICO`) for energy costs.
    - Added `get_fred_series()` to support historical window fetching.
-   - Restructured `history.json` storage to key entries by `dayId` instead of `weekId`.
+   - Restructured `data.json` storage to key entries by `dayId` instead of `weekId`.
 
 2. **AI Analysis Integration**
    - Created `clients/gemini.py` using a lightweight REST client for Gemini 2.0 Flash.
@@ -27,7 +27,7 @@ Waiting 10 weeks to build a trend line was too slow in the fast-moving AI space.
 3. **Data Backfill Script**
    - Built a robust, standalone `backfill.py` script.
    - Fetches 14 days of historical data for all 8 factors, handling API-specific rate limits (e.g., FRED 120/min limit, SerpApi's unique date constraints).
-   - Generates daily entries, scores them using the composite weighting, and merges them into `history.json`.
+   - Generates daily entries, scores them using the composite weighting, and merges them into `data.json`.
 
 4. **Frontend Architecture**
    - **`page.tsx`**: Stripped down to a minimal, high-impact landing page. Now features just the hero section, the live signal ticker, the composite score gauge, the history chart, and the new AI analysis card.
@@ -36,7 +36,7 @@ Waiting 10 weeks to build a trend line was too slow in the fast-moving AI space.
 
 ## Verified
 - Ran `backfill.py --days 14` which successfully queried FRED, yfinance, SerpApi, Vast.ai, and Epoch AI.
-- `history.json` populated with 22 entries (14 days of recent backfilled data).
+- `data.json` populated with 22 entries (14 days of recent backfilled data).
 - The frontend successfully renders the daily chart layout and properly displays the AI analysis card on the root page, with navigation successfully linking to the `/details` route.
 
 ## Not built (this step)

@@ -1,11 +1,11 @@
-"""Composes all factor scores into daily history.json entries."""
+"""Composes all factor scores into daily data.json entries."""
 from __future__ import annotations
 
 import datetime
 import logging
 import time
 
-from .clients.gemini import get_ai_analysis
+from .clients.gemini import get_ai_predictions
 from .core.config import OUTPUT_FILE
 from .core.types import FactorScores
 from .factors import (
@@ -77,10 +77,12 @@ def run_daily_pipeline(push: bool = True) -> None:
 
     history = upsert_entry(load_history(), entry)
 
-    # AI analysis on the full history (including today's new entry)
-    ai_text = get_ai_analysis(history)
-    entry["aiAnalysis"] = ai_text
-    # Re-upsert with the analysis attached
+    # AI predictions based on the 15-day window
+    ai_preds = get_ai_predictions(history[-15:])
+    if ai_preds:
+        entry["aiPredictions"] = ai_preds
+    
+    # Re-upsert with the predictions attached
     history = upsert_entry(history, entry)
 
     save_history(history)

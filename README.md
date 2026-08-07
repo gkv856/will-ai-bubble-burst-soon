@@ -27,9 +27,9 @@ The composite risk score is built by weighting the following factors:
 
 ## 🏗️ Architecture
 
-- **Pipeline (`backend/`)**: A modular Python package (`backend/pipeline/`) — one module per factor under `factors/`, shared FRED/scoring helpers under `clients/` and `core/`, and an `orchestrator.py` that composes all 8 scores into a weekly `history.json` entry. Entry point is `backend/main.py`.
+- **Pipeline (`backend/`)**: A modular Python package (`backend/pipeline/`) — one module per factor under `factors/`, shared FRED/scoring helpers under `clients/` and `core/`, and an `orchestrator.py` that composes all 8 scores into a weekly `data.json` entry. Entry point is `backend/main.py`.
 - **Dashboard (`frontend/`)**: A Next.js (React) application styled with Tailwind CSS, utilizing Recharts for data visualization and Lucide-react for iconography.
-- **Automation (`.github/workflows/update-data.yml`)**: A GitHub Actions workflow runs the pipeline every Wednesday at 9:00 AM IST (and can be triggered manually), commits the refreshed `history.json`, and pushes it — which triggers Vercel to redeploy. Runs entirely on GitHub's servers; no local machine or scheduler needs to stay on.
+- **Automation (`.github/workflows/update-data.yml`)**: A GitHub Actions workflow runs the pipeline every Wednesday at 9:00 AM IST (and can be triggered manually), commits the refreshed `data.json`, and pushes it — which triggers Vercel to redeploy. Runs entirely on GitHub's servers; no local machine or scheduler needs to stay on.
 
 ## 🚀 Setup & Installation
 
@@ -54,11 +54,11 @@ The composite risk score is built by weighting the following factors:
    FRED_API_KEY=your_key_here
    SERPAPI_KEY=your_key_here
    ```
-5. Run the pipeline to generate `history.json`:
+5. Run the pipeline to generate `data.json`:
    ```bash
    python main.py
    ```
-   This writes directly to `frontend/public/history.json` and commits + pushes it. Pass `--no-push` to update the file locally without committing/pushing (useful while testing changes to a factor).
+   This writes directly to `frontend/public/data.json` and commits + pushes it. Pass `--no-push` to update the file locally without committing/pushing (useful while testing changes to a factor).
 
 ### 2. Dashboard Setup (Next.js)
 
@@ -80,7 +80,7 @@ The composite risk score is built by weighting the following factors:
 
 The entire stack runs for free:
 - **Data Collection**: `.github/workflows/update-data.yml` runs the pipeline weekly on GitHub's own runners — no server or laptop uptime required.
-- **Hosting**: Vercel hosts the Next.js dashboard and redeploys automatically whenever the workflow pushes a new `history.json`.
+- **Hosting**: Vercel hosts the Next.js dashboard and redeploys automatically whenever the workflow pushes a new `data.json`.
 
 To enable it on your own fork, add `FRED_API_KEY` and `SERPAPI_KEY` as Actions secrets (repo **Settings → Secrets and variables → Actions**). The workflow already has `contents: write` permission to commit and push using the built-in `GITHUB_TOKEN` — no personal access token needed.
 

@@ -8,7 +8,7 @@ function scoreColor(score: number) {
 
 async function getLatestScore(siteUrl: string): Promise<number | null> {
   try {
-    const res = await fetch(`${siteUrl}history.json`, { cache: "no-store" });
+    const res = await fetch(`${siteUrl}data.json`, { cache: "no-store" });
     if (!res.ok) return null;
     const data = await res.json();
     const score = Array.isArray(data) ? data[data.length - 1]?.score : null;

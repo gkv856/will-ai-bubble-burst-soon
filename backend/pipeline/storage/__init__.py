@@ -1,1 +1,1 @@
-"""Persistence: reading/writing history.json and publishing it to GitHub."""
+"""Persistence: reading/writing data.json and publishing it to GitHub."""

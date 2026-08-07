@@ -67,7 +67,7 @@ export default function DetailsPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("/history.json");
+        const response = await fetch("/data.json");
         if (!response.ok) throw new Error("Data not found");
         const json = await response.json();
         if (json.length > 0) setLatestData(json[json.length - 1]);

@@ -1,4 +1,4 @@
-"""Commits and pushes the updated history.json to GitHub."""
+"""Commits and pushes the updated data.json to GitHub."""
 from __future__ import annotations
 
 import logging
@@ -31,7 +31,7 @@ def push_to_github() -> None:
             )
             logging.info("Successfully pushed to GitHub! Vercel will now deploy the update.")
         else:
-            logging.info("No new changes detected in history.json to push.")
+            logging.info("No new changes detected in data.json to push.")
     except subprocess.CalledProcessError as e:
         stderr = e.stderr.decode("utf-8") if e.stderr else str(e)
         logging.error(f"Failed to push to GitHub: {stderr}")

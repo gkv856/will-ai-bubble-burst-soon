@@ -1,4 +1,4 @@
-"""Read/write access to the published history.json file."""
+"""Read/write access to the published data.json file."""
 from __future__ import annotations
 
 import json

@@ -153,61 +153,61 @@
     "dayId": "2026-08-03",
     "timestamp": 1785715200,
     "factors": {
-      "demand": 100,
+      "demand": 50,
       "credit": 0,
       "valuation": 100,
       "energy": 67,
       "liquidity": 100,
-      "behavioral": 0,
+      "behavioral": 50,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 65
+    "score": 63
   },
   {
     "dayId": "2026-08-04",
     "timestamp": 1785801600,
     "factors": {
-      "demand": 100,
+      "demand": 50,
       "credit": 0,
       "valuation": 100,
       "energy": 50,
       "liquidity": 100,
-      "behavioral": 0,
+      "behavioral": 50,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 65
+    "score": 62
   },
   {
     "dayId": "2026-08-05",
     "timestamp": 1785888000,
     "factors": {
-      "demand": 100,
+      "demand": 50,
       "credit": 0,
       "valuation": 100,
       "energy": 50,
       "liquidity": 100,
-      "behavioral": 0,
+      "behavioral": 50,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 65
+    "score": 62
   },
   {
     "dayId": "2026-08-06",
     "timestamp": 1785974400,
     "factors": {
-      "demand": 100,
+      "demand": 50,
       "credit": 0,
       "valuation": 50,
       "energy": 50,
       "liquidity": 100,
-      "behavioral": 0,
+      "behavioral": 50,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 55
+    "score": 52
   },
   {
     "dayId": "2026-08-07",
@@ -218,10 +218,10 @@
       "valuation": 50,
       "energy": 50,
       "liquidity": 100,
-      "behavioral": 50,
+      "behavioral": 0,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 67
+    "score": 60
   }
 ]

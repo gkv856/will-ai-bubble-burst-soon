@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 BACKEND_DIR: Path = Path(__file__).resolve().parent.parent.parent
 PROJECT_ROOT: Path = BACKEND_DIR.parent
-OUTPUT_FILE: Path = PROJECT_ROOT / "frontend" / "public" / "history.json"
+OUTPUT_FILE: Path = PROJECT_ROOT / "frontend" / "public" / "data.json"
 
 # Load .env from backend/ first (local dev), then pipeline/ subdir as fallback
 load_dotenv(BACKEND_DIR / ".env")
