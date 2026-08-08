@@ -18,7 +18,8 @@ import {
 } from "lucide-react";
 
 const MathBreakdown = dynamic(
-  () => import("@/components/dashboard/MathBreakdown").then((m) => m.MathBreakdown),
+  () =>
+    import("@/components/dashboard/MathBreakdown").then((m) => m.MathBreakdown),
   { ssr: false },
 );
 
@@ -36,10 +37,14 @@ const MethodologyCard = ({
 }) => (
   <div className="glass-card rounded-xl p-4 cursor-default">
     <div className="flex items-start justify-between gap-3 mb-2">
-      <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">{id}</span>
+      <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">
+        {id}
+      </span>
       <span className="text-xs font-mono text-white/30 shrink-0">{weight}</span>
     </div>
-    <p className="text-sm font-semibold text-white/90 mb-1 font-mono">{title}</p>
+    <p className="text-sm font-semibold text-white/90 mb-1 font-mono">
+      {title}
+    </p>
     <p className="text-xs text-white/40 leading-relaxed">{desc}</p>
   </div>
 );
@@ -132,15 +137,16 @@ export default function DetailsPage() {
       {/* ── PAGE HEADER ────────────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-10 animate-fade-up">
         <div className="inline-flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/50 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-          8 macro signals · full breakdown
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />8 macro
+          signals · full breakdown
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
           Signal <span className="gradient-text-blue">Breakdown</span>
         </h1>
         <p className="text-white/40 text-sm font-mono max-w-xl">
           Individual factor scores, scoring methodology, and the composite
-          calculation — as of {latestData ? entryLabel(latestData) : "latest data"}.
+          calculation — as of{" "}
+          {latestData ? entryLabel(latestData) : "latest data"}.
         </p>
       </section>
 
@@ -153,7 +159,9 @@ export default function DetailsPage() {
         </div>
       )}
       {error && (
-        <p className="text-center text-red-400 text-sm font-mono py-20">{error}</p>
+        <p className="text-center text-red-400 text-sm font-mono py-20">
+          {error}
+        </p>
       )}
 
       {!isLoading && !error && (
@@ -175,48 +183,56 @@ export default function DetailsPage() {
                 score={latestData?.factors?.gpu ?? null}
                 id="gpu"
                 desc="RTX 4090 rental cost on Vast.ai vs historical baseline."
+                aiPrediction={latestData?.aiPredictions?.gpu}
               />
               <FactorCard
                 title="Credit Spreads"
                 score={latestData?.factors?.credit ?? null}
                 id="credit"
                 desc="Investment-grade bond spread (BAMLC0A0CM) from FRED."
+                aiPrediction={latestData?.aiPredictions?.credit}
               />
               <FactorCard
                 title="Energy Costs"
                 score={latestData?.factors?.energy ?? null}
                 id="energy"
                 desc="WTI crude oil price (FRED DCOILWTICO) — energy cost pressure on AI data centres."
+                aiPrediction={latestData?.aiPredictions?.energy}
               />
               <FactorCard
                 title="Demand Reality"
                 score={latestData?.factors?.demand ?? null}
                 id="demand"
                 desc="IGV/SMH ratio — software demand vs. hardware speculation."
+                aiPrediction={latestData?.aiPredictions?.demand}
               />
               <FactorCard
                 title="Data Wall"
                 score={latestData?.factors?.datawall ?? null}
                 id="datawall"
                 desc="Risk from AI training data exhaustion."
+                aiPrediction={latestData?.aiPredictions?.datawall}
               />
               <FactorCard
                 title="ERP Valuation"
                 score={latestData?.factors?.valuation ?? null}
                 id="valuation"
                 desc="S&P 500 earnings yield vs. the 10-year Treasury yield."
+                aiPrediction={latestData?.aiPredictions?.valuation}
               />
               <FactorCard
                 title="Retail FOMO"
                 score={latestData?.factors?.behavioral ?? null}
                 id="behavioral"
                 desc='Google Trends for "Nvidia options" + "AI investing".'
+                aiPrediction={latestData?.aiPredictions?.behavioral}
               />
               <FactorCard
                 title="Liquidity"
                 score={latestData?.factors?.liquidity ?? null}
                 id="liquidity"
                 desc="Overnight reverse repo volume (FRED RRPONTSYD) — tracks loose liquidity fuelling risk assets."
+                aiPrediction={latestData?.aiPredictions?.liquidity}
               />
             </div>
           </section>

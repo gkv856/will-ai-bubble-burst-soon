@@ -41,10 +41,6 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
     );
   }
 
-  // Determine gradient color for the line based on latest score
-  const latestScore = historyData[historyData.length - 1]?.score ?? 50;
-  const lineColor = latestScore < 40 ? "#10b981" : latestScore < 70 ? "#f59e0b" : "#ef4444";
-
   // Build chart data including future predictions
   const chartData: any[] = historyData.map(d => ({ ...d, label: entryLabel(d) }));
   
@@ -65,6 +61,32 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
     }
   }
 
+  // Calculate dynamic gradient offsets based on the line's bounding box
+  const scores = historyData.map(d => d.score);
+  const dataMax = Math.max(...scores);
+  const dataMin = Math.min(...scores);
+  const range = dataMax - dataMin || 1;
+  const offset70 = Math.max(0, Math.min(1, (dataMax - 70) / range)) * 100;
+  const offset40 = Math.max(0, Math.min(1, (dataMax - 40) / range)) * 100;
+
+  const renderGradientStops = () => {
+    const stops = [];
+    if (dataMax > 70) {
+      stops.push(<stop key="r1" offset="0%" stopColor="#ef4444" />);
+      stops.push(<stop key="r2" offset={`${offset70}%`} stopColor="#ef4444" />);
+    }
+    
+    stops.push(<stop key="y1" offset={`${offset70}%`} stopColor="#f59e0b" />);
+    stops.push(<stop key="y2" offset={`${offset40}%`} stopColor="#f59e0b" />);
+    
+    if (dataMin < 40) {
+      stops.push(<stop key="g1" offset={`${offset40}%`} stopColor="#10b981" />);
+      stops.push(<stop key="g2" offset="100%" stopColor="#10b981" />);
+    }
+    
+    return stops;
+  };
+
   return (
     <div
       className="glass-card rounded-2xl p-6 h-full min-h-[320px] flex flex-col"
@@ -81,9 +103,8 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
         <ResponsiveContainer width="100%" height={320}>
           <LineChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
             <defs>
-              <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={lineColor} stopOpacity={0.3} />
-                <stop offset="100%" stopColor={lineColor} stopOpacity={0.02} />
+              <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
+                {renderGradientStops()}
               </linearGradient>
             </defs>
 
@@ -95,11 +116,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
 
             <XAxis
               dataKey="label"
-              stroke="transparent"
-              tick={{ fill: "rgba(255,255,255,0.2)", fontSize: 9, fontFamily: "Fira Code" }}
-              tickLine={false}
-              axisLine={false}
-              tickMargin={10}
+              hide={true}
             />
             <YAxis
               stroke="transparent"
@@ -113,10 +130,10 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
             <Line
               type="monotone"
               dataKey="score"
-              stroke={lineColor}
+              stroke="url(#colorScore)"
               strokeWidth={2.5}
-              dot={{ fill: lineColor, strokeWidth: 0, r: 3 }}
-              activeDot={{ r: 5, fill: "#fff", stroke: lineColor, strokeWidth: 2 }}
+              dot={{ fill: "transparent", strokeWidth: 0, r: 3 }}
+              activeDot={{ r: 5, fill: "#fff", stroke: "#fff", strokeWidth: 2 }}
             />
             {compositePreds && (
               <Line

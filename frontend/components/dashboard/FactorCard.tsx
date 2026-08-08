@@ -9,6 +9,10 @@ interface FactorCardProps {
   score: number | null;
   id: string;
   desc?: string;
+  aiPrediction?: {
+    scores: number[];
+    reason: string;
+  };
 }
 
 export function getColorClass(score: number): string {
@@ -40,7 +44,7 @@ const ICONS: Record<string, React.ElementType> = {
   liquidity: Droplets,
 };
 
-export function FactorCard({ title, score, id, desc }: FactorCardProps) {
+export function FactorCard({ title, score, id, desc, aiPrediction }: FactorCardProps) {
   const [animated, setAnimated] = useState(0);
 
   useEffect(() => {
@@ -124,6 +128,19 @@ export function FactorCard({ title, score, id, desc }: FactorCardProps) {
       {/* Description */}
       {desc && (
         <p className="text-[11px] text-white/30 leading-relaxed line-clamp-2">{desc}</p>
+      )}
+
+      {/* AI Prediction */}
+      {aiPrediction && (
+        <div className="mt-4 pt-3 border-t border-purple-500/10">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-400" aria-hidden="true" />
+            <span className="text-[10px] font-mono text-purple-400/80 uppercase tracking-widest">AI Forecast</span>
+          </div>
+          <p className="text-[11px] text-white/50 leading-relaxed italic line-clamp-3">
+            "{aiPrediction.reason}"
+          </p>
+        </div>
       )}
     </div>
   );
