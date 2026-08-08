@@ -12,9 +12,15 @@ interface HistoryChartProps {
 
 function CustomTooltip({ active, payload, label }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
-  const score = payload[0].value as number;
-  const color = score < 40 ? "#10b981" : score < 70 ? "#f59e0b" : "#ef4444";
-  const label2 = score < 40 ? "Healthy" : score < 70 ? "Elevated Risk" : "Bubble Territory";
+  
+  const activePayload = payload.find(p => p.dataKey === "score") || payload.find(p => p.dataKey === "futureScore");
+  if (!activePayload) return null;
+
+  const score = activePayload.value as number;
+  const isPrediction = activePayload.payload?.isPrediction;
+  
+  const color = isPrediction ? "#a855f7" : (score < 40 ? "#10b981" : score < 70 ? "#f59e0b" : "#ef4444");
+  const label2 = isPrediction ? "AI Prediction" : (score < 40 ? "Healthy" : score < 70 ? "Elevated Risk" : "Bubble Territory");
 
   return (
     <div className="glass-card rounded-xl px-4 py-3 text-xs font-mono border border-white/10">
@@ -39,6 +45,26 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
   const latestScore = historyData[historyData.length - 1]?.score ?? 50;
   const lineColor = latestScore < 40 ? "#10b981" : latestScore < 70 ? "#f59e0b" : "#ef4444";
 
+  // Build chart data including future predictions
+  const chartData: any[] = historyData.map(d => ({ ...d, label: entryLabel(d) }));
+  
+  const latestData = historyData[historyData.length - 1];
+  const compositePreds = latestData?.aiPredictions?.composite?.scores;
+  
+  if (compositePreds && compositePreds.length === 3) {
+    // To connect the lines, the last historical day needs futureScore equal to its score
+    chartData[chartData.length - 1].futureScore = chartData[chartData.length - 1].score;
+    
+    // Add 3 future days
+    for (let i = 0; i < 3; i++) {
+      chartData.push({
+        label: `Day +${i + 1}`,
+        futureScore: compositePreds[i],
+        isPrediction: true
+      });
+    }
+  }
+
   return (
     <div
       className="glass-card rounded-2xl p-6 h-full min-h-[320px] flex flex-col"
@@ -53,7 +79,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
 
       <div className="flex-1 w-full" style={{ minHeight: 320 }}>
         <ResponsiveContainer width="100%" height={320}>
-          <LineChart data={historyData.map(d => ({ ...d, label: entryLabel(d) }))} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+          <LineChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor={lineColor} stopOpacity={0.3} />
@@ -92,6 +118,17 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
               dot={{ fill: lineColor, strokeWidth: 0, r: 3 }}
               activeDot={{ r: 5, fill: "#fff", stroke: lineColor, strokeWidth: 2 }}
             />
+            {compositePreds && (
+              <Line
+                type="monotone"
+                dataKey="futureScore"
+                stroke="#a855f7"
+                strokeWidth={2.5}
+                strokeDasharray="5 5"
+                dot={{ fill: "#a855f7", strokeWidth: 0, r: 3 }}
+                activeDot={{ r: 5, fill: "#fff", stroke: "#a855f7", strokeWidth: 2 }}
+              />
+            )}
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -104,6 +141,12 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
             {label}
           </span>
         ))}
+        {compositePreds && (
+          <span className="flex items-center gap-1.5 text-[10px] font-mono text-white/30 ml-auto">
+            <span className="w-2 h-2 rounded-full bg-purple-500" aria-hidden="true" />
+            AI Forecast (3D)
+          </span>
+        )}
       </div>
     </div>
   );

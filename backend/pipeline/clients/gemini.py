@@ -10,7 +10,7 @@ from ..core.config import GEMINI_API_KEY
 
 _GEMINI_URL = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-1.5-pro:generateContent"
+    "gemini-3-pro-preview:generateContent"
 )
 
 _SYSTEM_PROMPT = (
@@ -18,18 +18,20 @@ _SYSTEM_PROMPT = (
     "factors tracking the AI investment bubble. Each factor is scored 0-100 "
     "(0 = no risk, 100 = maximum risk). The factors are: demand, valuation, "
     "behavioral, liquidity, gpu, credit, energy, and datawall.\n\n"
-    "Given the previous days of data, predict the score for the NEXT day for "
-    "all 8 factors individually. Also provide a 1-3 sentence reason for each prediction.\n"
-    "You must return ONLY a JSON object with this exact structure:\n"
+    "Given the previous days of data, predict the scores for the NEXT 3 DAYS "
+    "(Day 1, Day 2, Day 3) for all 8 factors individually, as well as a 'composite' "
+    "score for each of the 3 days. Also provide a 1-3 sentence reason for each prediction.\n"
+    "You must return ONLY a JSON object with this exact structure (each 'scores' array must have exactly 3 integers):\n"
     "{\n"
-    '  "demand": {"score": 85, "reason": "..."},\n'
-    '  "valuation": {"score": 60, "reason": "..."},\n'
-    '  "behavioral": {"score": 90, "reason": "..."},\n'
-    '  "liquidity": {"score": 30, "reason": "..."},\n'
-    '  "gpu": {"score": 75, "reason": "..."},\n'
-    '  "credit": {"score": 40, "reason": "..."},\n'
-    '  "energy": {"score": 50, "reason": "..."},\n'
-    '  "datawall": {"score": 95, "reason": "..."}\n'
+    '  "composite": {"scores": [80, 81, 83], "reason": "..."},\n'
+    '  "demand": {"scores": [85, 85, 86], "reason": "..."},\n'
+    '  "valuation": {"scores": [60, 61, 61], "reason": "..."},\n'
+    '  "behavioral": {"scores": [90, 93, 95], "reason": "..."},\n'
+    '  "liquidity": {"scores": [30, 30, 31], "reason": "..."},\n'
+    '  "gpu": {"scores": [75, 75, 75], "reason": "..."},\n'
+    '  "credit": {"scores": [40, 42, 44], "reason": "..."},\n'
+    '  "energy": {"scores": [50, 50, 49], "reason": "..."},\n'
+    '  "datawall": {"scores": [95, 96, 96], "reason": "..."}\n'
     "}"
 )
 

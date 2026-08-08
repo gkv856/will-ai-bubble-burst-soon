@@ -1,3 +1,8 @@
+export interface AiPrediction {
+  scores: number[]; // Array of 3 scores (Day 1, Day 2, Day 3)
+  reason: string;
+}
+
 export interface WeekData {
   weekId?: string;
   dayId?: string;
@@ -5,6 +10,7 @@ export interface WeekData {
   factors: Record<string, number>;
   score: number;
   aiAnalysis?: string;
+  aiPredictions?: Record<string, AiPrediction>;
 }
 
 /** Returns the display label for an entry — dayId if available, else weekId. */

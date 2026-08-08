@@ -200,14 +200,14 @@
     "factors": {
       "demand": 50,
       "credit": 0,
-      "valuation": 50,
+      "valuation": 100,
       "energy": 50,
       "liquidity": 100,
       "behavioral": 50,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 52
+    "score": 62
   },
   {
     "dayId": "2026-08-07",
@@ -218,10 +218,84 @@
       "valuation": 50,
       "energy": 50,
       "liquidity": 100,
-      "behavioral": 0,
+      "behavioral": 50,
       "gpu": 50,
       "datawall": 50
     },
-    "score": 60
+    "score": 67,
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          68,
+          70,
+          72
+        ],
+        "reason": "Overall risk is increasing slightly across sectors."
+      },
+      "demand": {
+        "scores": [
+          85,
+          86,
+          86
+        ],
+        "reason": "Hardware demand remains high."
+      },
+      "valuation": {
+        "scores": [
+          60,
+          61,
+          61
+        ],
+        "reason": "Equities slightly adjusting."
+      },
+      "behavioral": {
+        "scores": [
+          90,
+          93,
+          95
+        ],
+        "reason": "Retail FOMO is spiking hard."
+      },
+      "liquidity": {
+        "scores": [
+          30,
+          30,
+          31
+        ],
+        "reason": "Liquidity is drying up."
+      },
+      "gpu": {
+        "scores": [
+          75,
+          75,
+          75
+        ],
+        "reason": "Spot prices stabilizing."
+      },
+      "credit": {
+        "scores": [
+          40,
+          42,
+          44
+        ],
+        "reason": "Spreads widening slowly."
+      },
+      "energy": {
+        "scores": [
+          50,
+          50,
+          49
+        ],
+        "reason": "Oil prices slightly down."
+      },
+      "datawall": {
+        "scores": [
+          95,
+          96,
+          96
+        ],
+        "reason": "Compute scaling hitting a wall."
+      }
+    }
   }
 ]
