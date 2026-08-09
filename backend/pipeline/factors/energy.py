@@ -1,28 +1,29 @@
-"""FACTOR 3: Energy constraints — WTI crude oil price as daily proxy (FRED DCOILWTICO)."""
+"""FACTOR: energy_costs — Average US retail electricity price (PRD §3.2.7).
+
+High energy cost = high risk (AI infra margin compression).
+score = percentile_rank(price_cents_per_kwh).
+"""
 from __future__ import annotations
 
-from ..clients.fred import get_fred_data, get_fred_series
-from ..core.scoring import normalize_score, safe_execute
+from datetime import datetime
 
-# Switched from APU000072610 (monthly retail electricity) to DCOILWTICO
-# (daily WTI crude oil $/barrel) for daily resolution. Both track energy
-# cost pressure on data centres; oil is noisier but updates every business day.
-_SERIES_ID = "DCOILWTICO"
-_HEALTHY = 65.0   # $/barrel — moderate price, no pressure
-_DANGER = 90.0    # $/barrel — high price, grid + cooling cost stress
+from ..clients.fred import get_fred_data
+from ..core.scoring import safe_execute
+from ..core.types import RawFetch
 
-
-@safe_execute(default_val=50)
-def get_energy_risk() -> int:
-    price = get_fred_data(_SERIES_ID)
-    return normalize_score(price, healthy_baseline=_HEALTHY, danger_threshold=_DANGER)
+FACTOR_ID = "energy_costs"
+SERIES_ID = "APUS000072610"  # Average retail electricity price, US city average
 
 
-@safe_execute(default_val={})
-def get_energy_risk_series(days: int = 14) -> dict[str, int]:
-    """Daily energy cost scores from WTI crude oil prices."""
-    series = get_fred_series(_SERIES_ID, days=days)
-    return {
-        date_str: normalize_score(val, healthy_baseline=_HEALTHY, danger_threshold=_DANGER)
-        for date_str, val in series.items()
-    }
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="FRED fetch failed"))
+def fetch_energy_costs() -> RawFetch:
+    """
+    Fetch latest US average retail electricity price (cents per kWh).
+    PRD ref: §3.2.7
+    """
+    price_cents_per_kwh = get_fred_data(SERIES_ID)
+    return RawFetch(
+        factor_id=FACTOR_ID,
+        raw_value=round(price_cents_per_kwh, 4),
+        fetched_at=datetime.utcnow(),
+    )

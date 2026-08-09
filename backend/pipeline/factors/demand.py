@@ -1,29 +1,39 @@
-"""FACTOR 4: Demand reality — software (IGV) vs. hardware (SMH) via yfinance."""
+"""FACTOR: demand_reality — IGV/SMH ratio (PRD §3.2.1).
+
+Returns the raw IGV/SMH ratio as a RawFetch. Normalization (percentile rank)
+is applied centrally by the orchestrator using historical data from the DB.
+"""
 from __future__ import annotations
+
+from datetime import datetime
 
 import yfinance as yf
 
-from ..core.scoring import normalize_score, safe_execute
+from ..core.scoring import safe_execute
+from ..core.types import RawFetch
+
+FACTOR_ID = "demand_reality"
 
 
-@safe_execute(default_val=50)
-def get_demand_risk() -> int:
-    igv = yf.Ticker("IGV").history(period="1mo")["Close"].dropna().iloc[-1]
-    smh = yf.Ticker("SMH").history(period="1mo")["Close"].dropna().iloc[-1]
-    ratio = igv / smh
-    return normalize_score(ratio, healthy_baseline=0.45, danger_threshold=0.35)
-
-
-@safe_execute(default_val={})
-def get_demand_risk_series(days: int = 14) -> dict[str, int]:
-    """Daily IGV/SMH ratio scores for the last *days* trading days."""
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="fetch failed"))
+def fetch_demand_reality() -> RawFetch:
+    """
+    Fetch latest IGV and SMH closing prices and return the ratio.
+    Low ratio (software lagging hardware) = high risk.
+    PRD: score = 100 - percentile_rank(ratio, window=5yr)
+    """
     igv = yf.Ticker("IGV").history(period="1mo")["Close"].dropna()
     smh = yf.Ticker("SMH").history(period="1mo")["Close"].dropna()
-    # Align on shared dates
-    common = igv.index.intersection(smh.index)
-    result: dict[str, int] = {}
-    for dt in sorted(common)[-days:]:
-        ratio = float(igv[dt] / smh[dt])
-        date_str = dt.strftime("%Y-%m-%d")
-        result[date_str] = normalize_score(ratio, healthy_baseline=0.45, danger_threshold=0.35)
-    return result
+
+    if igv.empty or smh.empty:
+        raise ValueError("IGV or SMH data is empty")
+
+    igv_latest = float(igv.iloc[-1])
+    smh_latest = float(smh.iloc[-1])
+    ratio = igv_latest / smh_latest
+
+    return RawFetch(
+        factor_id=FACTOR_ID,
+        raw_value=round(ratio, 4),
+        fetched_at=datetime.utcnow(),
+    )

@@ -1,33 +1,40 @@
-"""FACTOR 6: Valuation — equity risk premium (S&P 500 earnings yield vs. 10Y Treasury)."""
+"""FACTOR: erp_valuation — Equity Risk Premium (PRD §3.2.2).
+
+ERP = S&P 500 earnings yield - 10Y Treasury yield.
+Low/negative ERP = high risk. score = 100 - percentile_rank(erp).
+"""
 from __future__ import annotations
+
+from datetime import datetime
 
 import yfinance as yf
 
-from ..clients.fred import get_fred_data, get_fred_series
-from ..core.scoring import normalize_score, safe_execute
+from ..clients.fred import get_fred_data
+from ..core.scoring import safe_execute
+from ..core.types import RawFetch
+
+FACTOR_ID = "erp_valuation"
 
 
-@safe_execute(default_val=50)
-def get_valuation_risk() -> int:
-    trailing_pe = yf.Ticker("SPY").info.get("trailingPE")
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="fetch failed"))
+def fetch_erp_valuation() -> RawFetch:
+    """
+    Compute ERP = earnings_yield - treasury_yield.
+    Floors: ERP < -2% → score=100; Ceiling: ERP > 6% → score=0.
+    PRD ref: §3.2.2
+    """
+    # Use SPY trailing P/E as a proxy for S&P 500 P/E
+    info = yf.Ticker("SPY").info
+    trailing_pe = info.get("trailingPE")
     if not trailing_pe:
-        raise ValueError("SPY trailingPE is missing from yfinance response.")
-    earnings_yield = (1 / trailing_pe) * 100
-    treasury_yield = get_fred_data("DGS10")
-    erp = earnings_yield - treasury_yield
-    return normalize_score(erp, healthy_baseline=4.0, danger_threshold=0.0)
+        raise ValueError("SPY trailingPE missing from yfinance response")
 
+    earnings_yield = (1 / trailing_pe) * 100  # percent
+    treasury_yield = get_fred_data("DGS10")    # percent
+    erp = round(earnings_yield - treasury_yield, 4)
 
-@safe_execute(default_val={})
-def get_valuation_risk_series(days: int = 14) -> dict[str, int]:
-    """Daily ERP scores. Uses current trailing P/E (shifts slowly) with daily DGS10."""
-    trailing_pe = yf.Ticker("SPY").info.get("trailingPE")
-    if not trailing_pe:
-        raise ValueError("SPY trailingPE is missing from yfinance response.")
-    earnings_yield = (1 / trailing_pe) * 100
-    treasury_series = get_fred_series("DGS10", days=days)
-    result: dict[str, int] = {}
-    for date_str, treasury_yield in treasury_series.items():
-        erp = earnings_yield - treasury_yield
-        result[date_str] = normalize_score(erp, healthy_baseline=4.0, danger_threshold=0.0)
-    return result
+    return RawFetch(
+        factor_id=FACTOR_ID,
+        raw_value=erp,
+        fetched_at=datetime.utcnow(),
+    )

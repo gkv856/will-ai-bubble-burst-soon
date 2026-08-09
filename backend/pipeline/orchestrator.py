@@ -1,140 +1,350 @@
-"""Composes all factor scores into daily data.json entries."""
+"""Weekly pipeline orchestrator — PRD §6.
+
+Steps 1-10 as specified. Runs every Sunday at 02:00 UTC.
+Stores all results to SQLite/PostgreSQL via SQLAlchemy.
+"""
 from __future__ import annotations
 
-import datetime
+import asyncio
 import logging
-import time
+import uuid
+from datetime import datetime, timezone
+from typing import Optional
 
-from .clients.gemini import get_ai_predictions
-from .core.config import OUTPUT_FILE
-from .core.types import FactorScores
-from .factors import (
-    get_behavioral_risk,
-    get_behavioral_risk_series,
-    get_credit_risk,
-    get_credit_risk_series,
-    get_datawall_risk,
-    get_datawall_risk_series,
-    get_demand_risk,
-    get_demand_risk_series,
-    get_energy_risk,
-    get_energy_risk_series,
-    get_gpu_risk,
-    get_gpu_risk_series,
-    get_liquidity_risk,
-    get_liquidity_risk_series,
-    get_valuation_risk,
-    get_valuation_risk_series,
-)
-from .storage.history import load_history, save_history, upsert_bulk, upsert_entry
-from .storage.publisher import push_to_github
+import numpy as np
 
-# Weights for composite score — must sum to 1.0
-_WEIGHTS: dict[str, float] = {
-    "demand": 0.20,
-    "valuation": 0.20,
-    "behavioral": 0.15,
-    "liquidity": 0.15,
-    "gpu": 0.10,
-    "credit": 0.10,
-    "datawall": 0.05,
-    "energy": 0.05,
-}
+from pipeline.core.confidence import compute_base_variance, compute_composite, compute_confidence_interval
+from pipeline.core.correlation import correlation_penalty
+from pipeline.core.pattern_match import run_pattern_matching
+from pipeline.core.scoring import compute_velocity, percentile_rank_score
+from pipeline.core.types import FACTOR_IDS, SIGNAL_REGISTRY, RawFetch, SignalOutput
+from pipeline.core.weights import compute_adaptive_weights
+from pipeline.factors import FACTOR_FETCHERS
+
+logger = logging.getLogger(__name__)
+
+STALENESS_DAYS = 14  # PRD §3.3
 
 
-def _composite(factors: FactorScores) -> int:
-    """Compute the weighted composite risk score."""
-    return int(sum(factors[k] * w for k, w in _WEIGHTS.items()))
+def _get_db_session():
+    from app.db.session import SessionLocal
+    return SessionLocal()
 
 
-def _current_day_id() -> str:
-    return datetime.date.today().isoformat()
+# ── Step 9: Store results ─────────────────────────────────────────────────────
+
+def _store_pipeline_run(
+    run_id: str,
+    run_date: datetime,
+    signal_outputs: dict[str, SignalOutput],
+    composite_result: dict,
+    confidence: dict,
+    analog_result: dict,
+    weights: dict,
+    corr_penalty: float,
+    quality_verdict: str,
+) -> None:
+    from app.db.models import AnalogMatch, PipelineRun, SignalScore
+
+    db = _get_db_session()
+    try:
+        run = PipelineRun(
+            id=run_id,
+            run_date=run_date,
+            composite_score=composite_result.get("composite_score"),
+            composite_lower=confidence.get("lower"),
+            composite_upper=confidence.get("upper"),
+            composite_std_dev=confidence.get("std_dev"),
+            degradation_multiplier=confidence.get("degradation_multiplier"),
+            correlation_penalty=round(corr_penalty, 2),
+            weights_used=weights,
+            quality_verdict=quality_verdict,
+            low_confidence=(quality_verdict == "RED"),
+        )
+        db.add(run)
+
+        for fid, output in signal_outputs.items():
+            ss = SignalScore(
+                id=str(uuid.uuid4()),
+                run_id=run_id,
+                factor_id=fid,
+                raw_value=output.raw_value,
+                score=output.score,
+                velocity_4wk=output.velocity_4wk,
+                velocity_12wk=output.velocity_12wk,
+                fetched_at=output.fetched_at,
+                stale=output.stale,
+                error_message=output.error_message,
+            )
+            db.add(ss)
+
+        # Store analogs
+        for atype in ("bubble", "boom"):
+            for a in analog_result.get(f"{atype}_analogs", []):
+                am = AnalogMatch(
+                    id=str(uuid.uuid4()),
+                    run_id=run_id,
+                    library_type=atype,
+                    episode_id=a.get("episode_id"),
+                    episode_name=a.get("episode_name"),
+                    week_matched=a.get("week_matched"),
+                    similarity=a.get("similarity"),
+                    weeks_to_peak=a.get("weeks_to_peak"),
+                    max_drawdown_pct=a.get("max_drawdown_pct"),
+                )
+                db.add(am)
+
+        db.commit()
+        logger.info(f"Pipeline run {run_id[:8]}… stored to DB.")
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Failed to store pipeline run: {e}")
+        raise
+    finally:
+        db.close()
 
 
-def run_daily_pipeline(push: bool = True) -> None:
-    """Daily run: fetch today's scores, compute composite, add AI analysis."""
-    logging.info("Fetching daily AI bubble metrics...")
+# ── Historical data helpers ───────────────────────────────────────────────────
 
-    factors: FactorScores = {
-        "gpu": get_gpu_risk(),
-        "credit": get_credit_risk(),
-        "energy": get_energy_risk(),
-        "demand": get_demand_risk(),
-        "datawall": get_datawall_risk(),
-        "valuation": get_valuation_risk(),
-        "behavioral": get_behavioral_risk(),
-        "liquidity": get_liquidity_risk(),
-    }
+def _load_raw_history(factor_id: str, limit: int = 260) -> list[float]:
+    """Load historical raw_values for a factor from the DB (oldest first)."""
+    from app.db.models import PipelineRun, SignalScore
+    db = _get_db_session()
+    try:
+        rows = (
+            db.query(SignalScore.raw_value, PipelineRun.run_date)
+            .join(PipelineRun, SignalScore.run_id == PipelineRun.id)
+            .filter(SignalScore.factor_id == factor_id, SignalScore.raw_value.isnot(None))
+            .order_by(PipelineRun.run_date.asc())
+            .limit(limit)
+            .all()
+        )
+        return [float(r.raw_value) for r in rows]
+    finally:
+        db.close()
 
-    composite = _composite(factors)
 
-    entry: dict = {
-        "dayId": _current_day_id(),
-        "timestamp": int(time.time()),
-        "factors": factors,
-        "score": composite,
-    }
+def _load_score_history(factor_id: str, limit: int = 52) -> list[float]:
+    """Load historical scores for velocity computation (oldest first)."""
+    from app.db.models import PipelineRun, SignalScore
+    db = _get_db_session()
+    try:
+        rows = (
+            db.query(SignalScore.score, PipelineRun.run_date)
+            .join(PipelineRun, SignalScore.run_id == PipelineRun.id)
+            .filter(SignalScore.factor_id == factor_id, SignalScore.score.isnot(None))
+            .order_by(PipelineRun.run_date.asc())
+            .limit(limit)
+            .all()
+        )
+        return [float(r.score) for r in rows]
+    finally:
+        db.close()
 
-    history = upsert_entry(load_history(), entry)
 
-    # AI predictions based on the 15-day window
-    ai_preds = get_ai_predictions(history[-15:])
-    if ai_preds:
-        entry["aiPredictions"] = ai_preds
-    
-    # Re-upsert with the predictions attached
-    history = upsert_entry(history, entry)
+def _load_scores_matrix(limit: int = 12) -> np.ndarray:
+    """Load last N weeks of all 9 signal scores as a (N, 9) matrix."""
+    from app.db.models import PipelineRun, SignalScore
+    db = _get_db_session()
+    try:
+        runs = (
+            db.query(PipelineRun.id)
+            .order_by(PipelineRun.run_date.desc())
+            .limit(limit)
+            .all()
+        )
+        run_ids = [r.id for r in runs]
+        if not run_ids:
+            return np.array([])
 
-    save_history(history)
-    logging.info(f"Saved to {OUTPUT_FILE}. Composite: {composite}%. AI analysis: {len(ai_text)} chars.")
+        all_scores = (
+            db.query(SignalScore)
+            .filter(SignalScore.run_id.in_(run_ids))
+            .all()
+        )
+        # Build matrix
+        by_run: dict[str, dict[str, float]] = {rid: {} for rid in run_ids}
+        for s in all_scores:
+            if s.score is not None:
+                by_run[s.run_id][s.factor_id] = float(s.score)
 
-    if push:
-        push_to_github()
+        matrix_rows = []
+        for rid in reversed(run_ids):  # oldest first
+            row = [by_run[rid].get(fid, float("nan")) for fid in FACTOR_IDS]
+            matrix_rows.append(row)
+
+        return np.array(matrix_rows)
+    finally:
+        db.close()
+
+
+def _count_history_weeks() -> int:
+    from app.db.models import PipelineRun
+    db = _get_db_session()
+    try:
+        return db.query(PipelineRun).count()
+    finally:
+        db.close()
+
+
+# ── Quality verdict ────────────────────────────────────────────────────────────
+
+def _quality_verdict(stale_count: int, missing_count: int) -> str:
+    total_bad = stale_count + missing_count
+    if total_bad == 0:
+        return "GREEN"
+    elif total_bad <= 2:
+        return "YELLOW"
     else:
-        logging.info("Skipping push to GitHub (--no-push).")
+        return "RED"
 
 
-def run_backfill(days: int = 14, push: bool = True) -> None:
-    """One-time backfill: fetch historical daily scores for all factors."""
-    logging.info(f"Backfilling {days} days of historical data...")
+# ── Main pipeline ─────────────────────────────────────────────────────────────
 
-    # Collect daily series from each factor
-    series_by_factor = {
-        "gpu": get_gpu_risk_series(days),
-        "credit": get_credit_risk_series(days),
-        "energy": get_energy_risk_series(days),
-        "demand": get_demand_risk_series(days),
-        "datawall": get_datawall_risk_series(days),
-        "valuation": get_valuation_risk_series(days),
-        "behavioral": get_behavioral_risk_series(days),
-        "liquidity": get_liquidity_risk_series(days),
-    }
+async def run_weekly_pipeline() -> None:
+    """
+    PRD §6.2 — Main weekly pipeline. Called by APScheduler.
+    Steps 1-10.
+    """
+    run_id = str(uuid.uuid4())
+    run_date = datetime.now(timezone.utc).replace(tzinfo=None)
+    logger.info(f"=== Weekly pipeline starting. run_id={run_id[:8]} ===")
 
-    # Collect all dates across all factors
-    all_dates: set[str] = set()
-    for series in series_by_factor.values():
-        all_dates.update(series.keys())
+    # ── Step 1: Fetch all 9 signals in parallel ───────────────────────────────
+    loop = asyncio.get_event_loop()
 
-    # Build an entry per date, filling missing factors with 50 (neutral default)
-    entries: list[dict] = []
-    for date_str in sorted(all_dates):
-        factors: FactorScores = {
-            factor: series.get(date_str, 50)
-            for factor, series in series_by_factor.items()
-        }
-        entries.append({
-            "dayId": date_str,
-            "timestamp": int(datetime.datetime.fromisoformat(date_str).timestamp()),
-            "factors": factors,
-            "score": _composite(factors),
-        })
+    async def _fetch_one(fid: str) -> tuple[str, RawFetch]:
+        fetcher = FACTOR_FETCHERS[fid]
+        result = await loop.run_in_executor(None, fetcher)
+        return fid, result
 
-    history = upsert_bulk(load_history(), entries)
-    save_history(history)
-    logging.info(f"Backfilled {len(entries)} entries to {OUTPUT_FILE}.")
+    tasks = [_fetch_one(fid) for fid in FACTOR_IDS]
+    raw_results: dict[str, RawFetch] = {}
+    for coro in asyncio.as_completed(tasks):
+        fid, result = await coro
+        raw_results[fid] = result
+        logger.info(f"  [{fid}] raw_value={result.raw_value}, error={result.error_message}")
 
-    if push:
-        push_to_github()
-    else:
-        logging.info("Skipping push to GitHub (--no-push).")
+    # ── Steps 2-3: Normalize + velocity ──────────────────────────────────────
+    signal_outputs: dict[str, SignalOutput] = {}
 
+    for fid in FACTOR_IDS:
+        raw = raw_results[fid]
+        meta = SIGNAL_REGISTRY[fid]
+
+        if raw.raw_value is None:
+            signal_outputs[fid] = SignalOutput(
+                factor_id=fid,
+                raw_value=None,
+                score=None,
+                stale=True,
+                error_message=raw.error_message,
+                fetched_at=raw.fetched_at,
+            )
+            continue
+
+        # Check staleness
+        now = datetime.utcnow()
+        age_days = (now - raw.fetched_at).days if raw.fetched_at else 0
+        is_stale = age_days > STALENESS_DAYS or (raw.error_message is not None)
+
+        # Normalize using historical raw values from DB
+        raw_history = _load_raw_history(fid, limit=260)
+        raw_history.append(raw.raw_value)  # include current
+        score = percentile_rank_score(
+            current_value=raw.raw_value,
+            history=raw_history,
+            invert=meta["invert"],
+        )
+
+        # Narrative bonus: +10 if fraction > 0.70 (PRD §3.2.9)
+        if fid == "narrative" and raw.raw_value is not None and raw.raw_value > 0.70:
+            score = min(100, score + 10)
+
+        # Velocity (only for velocity-safe signals)
+        velocity_4wk: Optional[float] = None
+        velocity_12wk: Optional[float] = None
+        if meta["velocity_safe"]:
+            score_hist = _load_score_history(fid, limit=52)
+            score_hist.append(float(score))
+            velocity_4wk = compute_velocity(score_hist, weeks=4)
+            velocity_12wk = compute_velocity(score_hist, weeks=12)
+
+        signal_outputs[fid] = SignalOutput(
+            factor_id=fid,
+            raw_value=raw.raw_value,
+            score=score,
+            velocity_4wk=velocity_4wk,
+            velocity_12wk=velocity_12wk,
+            fetched_at=raw.fetched_at,
+            stale=is_stale,
+            error_message=raw.error_message,
+        )
+
+    # ── Step 4: Adaptive weights ──────────────────────────────────────────────
+    scores_map = {fid: s.score for fid, s in signal_outputs.items()}
+    velocities_map = {fid: s.velocity_4wk for fid, s in signal_outputs.items()}
+    weights = compute_adaptive_weights(scores_map, velocities_map)
+
+    # ── Step 5: Correlation penalty ───────────────────────────────────────────
+    scores_matrix = _load_scores_matrix(limit=12)
+    corr_penalty = correlation_penalty(scores_matrix) if scores_matrix.size > 0 else 0.0
+
+    # ── Step 6: Composite score ───────────────────────────────────────────────
+    composite_result = compute_composite(scores_map, weights, corr_penalty)
+
+    composite_score = composite_result.get("composite_score")
+    if composite_score is None:
+        logger.error("Composite score could not be computed — aborting run.")
+        return
+
+    # ── Step 7: Confidence interval ───────────────────────────────────────────
+    stale_count = sum(1 for s in signal_outputs.values() if s.stale)
+    missing_count = sum(1 for s in signal_outputs.values() if s.score is None)
+    history_weeks = _count_history_weeks()
+
+    base_variance = compute_base_variance(scores_map, weights)
+    confidence = compute_confidence_interval(
+        composite_score=composite_score,
+        base_variance=base_variance,
+        stale_count=stale_count,
+        missing_count=missing_count,
+        history_weeks=history_weeks,
+        corr_penalty=corr_penalty,
+    )
+
+    # ── Step 8: Pattern matching ──────────────────────────────────────────────
+    current_vector = {fid: s.score for fid, s in signal_outputs.items()}
+    analog_result = run_pattern_matching(current_vector, top_k=3)
+
+    # ── Step 9: Store ─────────────────────────────────────────────────────────
+    quality = _quality_verdict(stale_count, missing_count)
+    _store_pipeline_run(
+        run_id=run_id,
+        run_date=run_date,
+        signal_outputs=signal_outputs,
+        composite_result=composite_result,
+        confidence=confidence,
+        analog_result=analog_result,
+        weights=weights,
+        corr_penalty=corr_penalty,
+        quality_verdict=quality,
+    )
+
+    # ── Step 10: Quality report ───────────────────────────────────────────────
+    logger.info(
+        f"=== Pipeline complete ==="
+        f"\n  composite_score = {composite_score}"
+        f"\n  CI = [{confidence['lower']}, {confidence['upper']}]"
+        f"\n  signals_fresh={len(FACTOR_IDS) - stale_count - missing_count}"
+        f"\n  signals_stale={stale_count}"
+        f"\n  signals_missing={missing_count}"
+        f"\n  quality_verdict={quality}"
+        f"\n  corr_penalty={corr_penalty}"
+        f"\n  analog_risk={analog_result.get('adjusted_risk')}"
+    )
+
+
+def run_pipeline_sync() -> None:
+    """Convenience wrapper to run the async pipeline synchronously (for CLI use)."""
+    asyncio.run(run_weekly_pipeline())

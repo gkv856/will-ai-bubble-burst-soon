@@ -1,56 +1,87 @@
-"""FACTOR 5: AI data wall — deceleration in frontier training-compute scaling (Epoch AI)."""
+"""FACTOR: data_wall — Training compute growth YoY (PRD §3.2.8).
 
+Low/negative compute growth = scaling stalling = high risk.
+score = 100 - percentile_rank(yoy_growth).
+If YoY growth < 0, score = 100.
+
+Data source: Epoch AI compute dataset. Because this data is annual and sparse,
+we stub with a reasonable current estimate when the live fetch fails.
+"""
 from __future__ import annotations
 
-import datetime
-import io
+import logging
+from datetime import datetime
 
-import numpy as np
-import pandas as pd
 import requests
 
-from ..core.scoring import normalize_score, safe_execute
+from ..core.scoring import safe_execute
+from ..core.types import RawFetch
 
-EPOCH_CSV_URL = "https://epoch.ai/data/notable_ai_models.csv"
+FACTOR_ID = "data_wall"
+EPOCH_URL = "https://epochai.org/data/compute.csv"
+logger = logging.getLogger(__name__)
 
 
-def _compute_datawall_score() -> int:
-    """Shared computation for the data wall risk score."""
-    response = requests.get(EPOCH_CSV_URL, timeout=30)
-    response.raise_for_status()
-    models = pd.read_csv(io.BytesIO(response.content))
-
-    models["Publication date"] = pd.to_datetime(
-        models["Publication date"], errors="coerce"
-    )
-    models = models.dropna(subset=["Publication date", "Training compute (FLOP)"])
-    models = models[models["Training compute (FLOP)"] > 0].sort_values(
-        "Publication date"
-    )
-
-    def frontier_log10_flop(cutoff: pd.Timestamp) -> float:
-        return np.log10(
-            models[models["Publication date"] <= cutoff][
-                "Training compute (FLOP)"
-            ].max()
+def fetch_data_wall() -> RawFetch:
+    """
+    Attempt to fetch Epoch AI compute data. Falls back to a stub if unavailable.
+    PRD ref: §3.2.8
+    """
+    result = _try_epoch_fetch()
+    if result.raw_value is None:
+        # Stub: use a reasonable 2024-2026 estimate (~3-4× YoY FLOP growth slowing from 4-5×)
+        # This makes the signal functional without hard-coding zeros.
+        logger.warning("Epoch AI fetch failed — using stub YoY compute growth of 3.0")
+        return RawFetch(
+            factor_id=FACTOR_ID,
+            raw_value=3.0,  # 3× YoY is slowing but not stalled
+            fetched_at=datetime.utcnow(),
+            error_message="Epoch AI unavailable — stub value",
         )
+    return result
 
-    latest_date = models["Publication date"].max()
-    oom_growth_last_year = frontier_log10_flop(latest_date) - frontier_log10_flop(
-        latest_date - pd.DateOffset(months=12)
+
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="Epoch AI fetch failed"))
+def _try_epoch_fetch() -> RawFetch:
+    resp = requests.get(EPOCH_URL, timeout=30, headers={"User-Agent": "ai-bubble-tracker/1.0"})
+    resp.raise_for_status()
+
+    lines = resp.text.strip().split("\n")
+    if len(lines) < 3:
+        raise ValueError("Epoch AI CSV too short")
+
+    # Parse CSV: expect columns Year, Training_compute_FLOP, ...
+    headers = [h.strip().lower() for h in lines[0].split(",")]
+    year_col = next((i for i, h in enumerate(headers) if "year" in h), None)
+    flop_col = next((i for i, h in enumerate(headers) if "compute" in h or "flop" in h), None)
+
+    if year_col is None or flop_col is None:
+        raise ValueError(f"Unexpected Epoch AI CSV columns: {headers}")
+
+    data: list[tuple[int, float]] = []
+    for line in lines[1:]:
+        parts = line.split(",")
+        try:
+            yr = int(parts[year_col].strip())
+            flop = float(parts[flop_col].strip())
+            data.append((yr, flop))
+        except (ValueError, IndexError):
+            continue
+
+    if len(data) < 2:
+        raise ValueError("Not enough Epoch AI data points")
+
+    data.sort()
+    latest_yr, latest_flop = data[-1]
+    prev_yr, prev_flop = data[-2]
+
+    if prev_flop <= 0:
+        raise ValueError("Previous compute FLOP is zero/negative")
+
+    yoy_growth = round((latest_flop - prev_flop) / abs(prev_flop), 4)
+
+    return RawFetch(
+        factor_id=FACTOR_ID,
+        raw_value=yoy_growth,
+        fetched_at=datetime.utcnow(),
     )
-    return normalize_score(
-        oom_growth_last_year, healthy_baseline=1.0, danger_threshold=0.0
-    )
-
-
-@safe_execute(default_val=50)
-def get_datawall_risk() -> int:
-    return _compute_datawall_score()
-
-
-@safe_execute(default_val={})
-def get_datawall_risk_series(days: int = 14) -> dict[str, int]:
-    """Returns today's score only — Epoch AI data updates infrequently."""
-    today = datetime.date.today().isoformat()
-    return {today: _compute_datawall_score()}

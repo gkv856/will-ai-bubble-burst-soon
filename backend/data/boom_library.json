@@ -1,0 +1,110 @@
+[
+  {
+    "episode_id": "cloud_2012_2015",
+    "name": "Cloud Computing Boom",
+    "sector": "Enterprise Software / Cloud",
+    "peak_date": null,
+    "episode_start": "2012-01-01",
+    "episode_end": "2015-12-31",
+    "max_drawdown_pct": null,
+    "description": "Massive CapEx, sustained revenue growth — proved to be a real boom, not a bubble.",
+    "weekly_vectors": [
+      {
+        "week": "2012-06-04",
+        "signals": {
+          "demand_reality": 60, "erp_valuation": 45, "retail_fomo": 30,
+          "m2_liquidity": 55, "gpu_spot": 30, "credit_spreads": 30,
+          "energy_costs": 35, "data_wall": 60, "narrative": 40
+        }
+      },
+      {
+        "week": "2013-06-03",
+        "signals": {
+          "demand_reality": 65, "erp_valuation": 48, "retail_fomo": 35,
+          "m2_liquidity": 52, "gpu_spot": 28, "credit_spreads": 28,
+          "energy_costs": 38, "data_wall": 65, "narrative": 42
+        }
+      },
+      {
+        "week": "2014-06-02",
+        "signals": {
+          "demand_reality": 68, "erp_valuation": 50, "retail_fomo": 38,
+          "m2_liquidity": 50, "gpu_spot": 25, "credit_spreads": 25,
+          "energy_costs": 40, "data_wall": 68, "narrative": 45
+        }
+      }
+    ]
+  },
+  {
+    "episode_id": "saas_2017_2019",
+    "name": "SaaS Expansion",
+    "sector": "Software / SaaS",
+    "peak_date": null,
+    "episode_start": "2017-01-01",
+    "episode_end": "2019-12-31",
+    "max_drawdown_pct": null,
+    "description": "High valuations, but revenue caught up — sustained 30-50% revenue growth justified multiples.",
+    "weekly_vectors": [
+      {
+        "week": "2017-06-05",
+        "signals": {
+          "demand_reality": 70, "erp_valuation": 52, "retail_fomo": 35,
+          "m2_liquidity": 45, "gpu_spot": 32, "credit_spreads": 28,
+          "energy_costs": 38, "data_wall": 50, "narrative": 38
+        }
+      },
+      {
+        "week": "2018-06-04",
+        "signals": {
+          "demand_reality": 72, "erp_valuation": 55, "retail_fomo": 40,
+          "m2_liquidity": 42, "gpu_spot": 30, "credit_spreads": 30,
+          "energy_costs": 40, "data_wall": 52, "narrative": 40
+        }
+      },
+      {
+        "week": "2019-06-03",
+        "signals": {
+          "demand_reality": 68, "erp_valuation": 58, "retail_fomo": 42,
+          "m2_liquidity": 44, "gpu_spot": 28, "credit_spreads": 28,
+          "energy_costs": 42, "data_wall": 55, "narrative": 42
+        }
+      }
+    ]
+  },
+  {
+    "episode_id": "ai_wave1_2016_2018",
+    "name": "AI/ML Wave 1",
+    "sector": "Artificial Intelligence / Machine Learning",
+    "peak_date": null,
+    "episode_start": "2016-01-01",
+    "episode_end": "2018-12-31",
+    "max_drawdown_pct": null,
+    "description": "First AI hype cycle post-AlphaGo. High excitement, significant capability gains. Plateaued but did not burst — real productivity gains materialized.",
+    "weekly_vectors": [
+      {
+        "week": "2016-06-06",
+        "signals": {
+          "demand_reality": 55, "erp_valuation": 50, "retail_fomo": 40,
+          "m2_liquidity": 48, "gpu_spot": 45, "credit_spreads": 30,
+          "energy_costs": 35, "data_wall": 72, "narrative": 55
+        }
+      },
+      {
+        "week": "2017-06-05",
+        "signals": {
+          "demand_reality": 58, "erp_valuation": 52, "retail_fomo": 48,
+          "m2_liquidity": 45, "gpu_spot": 55, "credit_spreads": 28,
+          "energy_costs": 38, "data_wall": 78, "narrative": 60
+        }
+      },
+      {
+        "week": "2018-06-04",
+        "signals": {
+          "demand_reality": 60, "erp_valuation": 55, "retail_fomo": 45,
+          "m2_liquidity": 42, "gpu_spot": 58, "credit_spreads": 30,
+          "energy_costs": 40, "data_wall": 75, "narrative": 55
+        }
+      }
+    ]
+  }
+]

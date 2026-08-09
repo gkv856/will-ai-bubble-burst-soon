@@ -1,28 +1,41 @@
-"""FACTOR 8: Liquidity — overnight reverse repo volume as daily proxy (FRED RRPONTSYD)."""
+"""FACTOR: m2_liquidity — M2 Money Supply YoY change (PRD §3.2.4).
+
+Contracting M2 = high risk. score = 100 - percentile_rank(yoy_change).
+"""
 from __future__ import annotations
 
-from ..clients.fred import get_fred_data, get_fred_series
-from ..core.scoring import normalize_score, safe_execute
+from datetime import datetime
 
-# Switched from WM2NS (weekly M2 money supply) to RRPONTSYD (daily overnight
-# reverse repo volume, in $ billions). Lower repo = more liquidity available
-# for risk assets = higher bubble-fuel risk.
-_SERIES_ID = "RRPONTSYD"
-_HEALTHY = 500.0    # $500B parked in repo — plenty of drain, less loose cash
-_DANGER = 100.0     # $100B — nearly all liquidity is loose in the system
+from ..clients.fred import get_fred_series
+from ..core.scoring import safe_execute
+from ..core.types import RawFetch
 
-
-@safe_execute(default_val=50)
-def get_liquidity_risk() -> int:
-    repo_volume = get_fred_data(_SERIES_ID)
-    return normalize_score(repo_volume, healthy_baseline=_HEALTHY, danger_threshold=_DANGER)
+FACTOR_ID = "m2_liquidity"
+SERIES_ID = "WM2NS"  # Weekly M2, seasonally adjusted
 
 
-@safe_execute(default_val={})
-def get_liquidity_risk_series(days: int = 14) -> dict[str, int]:
-    """Daily liquidity scores from overnight reverse repo volume."""
-    series = get_fred_series(_SERIES_ID, days=days)
-    return {
-        date_str: normalize_score(val, healthy_baseline=_HEALTHY, danger_threshold=_DANGER)
-        for date_str, val in series.items()
-    }
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="fetch failed"))
+def fetch_m2_liquidity() -> RawFetch:
+    """
+    Fetch M2 and compute YoY % change (52-week).
+    PRD ref: §3.2.4
+    """
+    # Fetch last 56 weeks of data (52 + buffer for missing dates)
+    series = get_fred_series(SERIES_ID, days=400)
+    if len(series) < 53:
+        raise ValueError(f"Insufficient M2 data: only {len(series)} observations")
+
+    sorted_dates = sorted(series.keys())
+    latest_val = series[sorted_dates[-1]]
+    year_ago_val = series[sorted_dates[-53]] if len(sorted_dates) >= 53 else series[sorted_dates[0]]
+
+    if year_ago_val == 0:
+        raise ValueError("M2 year-ago value is zero")
+
+    yoy_change = round((latest_val - year_ago_val) / abs(year_ago_val) * 100, 4)
+
+    return RawFetch(
+        factor_id=FACTOR_ID,
+        raw_value=yoy_change,
+        fetched_at=datetime.utcnow(),
+    )

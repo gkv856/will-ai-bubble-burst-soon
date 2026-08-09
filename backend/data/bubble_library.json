@@ -1,0 +1,193 @@
+[
+  {
+    "episode_id": "dotcom_1998_2000",
+    "name": "Dot-Com Bubble",
+    "sector": "Technology",
+    "peak_date": "2000-03-10",
+    "episode_start": "1998-01-01",
+    "episode_end": "2002-10-01",
+    "max_drawdown_pct": -78,
+    "weekly_vectors": [
+      {
+        "week": "1998-06-01",
+        "signals": {
+          "demand_reality": 55, "erp_valuation": 60, "retail_fomo": 45,
+          "m2_liquidity": 35, "gpu_spot": 40, "credit_spreads": 25,
+          "energy_costs": 20, "data_wall": 55, "narrative": 60
+        }
+      },
+      {
+        "week": "1999-01-04",
+        "signals": {
+          "demand_reality": 65, "erp_valuation": 72, "retail_fomo": 65,
+          "m2_liquidity": 42, "gpu_spot": 48, "credit_spreads": 28,
+          "energy_costs": 22, "data_wall": 48, "narrative": 75
+        }
+      },
+      {
+        "week": "1999-06-07",
+        "signals": {
+          "demand_reality": 72, "erp_valuation": 78, "retail_fomo": 75,
+          "m2_liquidity": 48, "gpu_spot": 55, "credit_spreads": 30,
+          "energy_costs": 25, "data_wall": 45, "narrative": 82
+        }
+      },
+      {
+        "week": "1999-09-06",
+        "signals": {
+          "demand_reality": 75, "erp_valuation": 80, "retail_fomo": 85,
+          "m2_liquidity": 55, "gpu_spot": 60, "credit_spreads": 25,
+          "energy_costs": 30, "data_wall": 40, "narrative": 90
+        }
+      },
+      {
+        "week": "1999-12-27",
+        "signals": {
+          "demand_reality": 82, "erp_valuation": 88, "retail_fomo": 92,
+          "m2_liquidity": 50, "gpu_spot": 65, "credit_spreads": 22,
+          "energy_costs": 28, "data_wall": 35, "narrative": 95
+        }
+      },
+      {
+        "week": "2000-02-14",
+        "signals": {
+          "demand_reality": 88, "erp_valuation": 92, "retail_fomo": 95,
+          "m2_liquidity": 48, "gpu_spot": 68, "credit_spreads": 20,
+          "energy_costs": 30, "data_wall": 32, "narrative": 97
+        }
+      }
+    ]
+  },
+  {
+    "episode_id": "housing_2005_2008",
+    "name": "US Housing Bubble",
+    "sector": "Real Estate / Finance",
+    "peak_date": "2007-07-01",
+    "episode_start": "2004-01-01",
+    "episode_end": "2009-03-01",
+    "max_drawdown_pct": -52,
+    "weekly_vectors": [
+      {
+        "week": "2005-01-03",
+        "signals": {
+          "demand_reality": 40, "erp_valuation": 55, "retail_fomo": 35,
+          "m2_liquidity": 60, "gpu_spot": 30, "credit_spreads": 15,
+          "energy_costs": 45, "data_wall": 30, "narrative": 50
+        }
+      },
+      {
+        "week": "2006-06-05",
+        "signals": {
+          "demand_reality": 38, "erp_valuation": 65, "retail_fomo": 50,
+          "m2_liquidity": 68, "gpu_spot": 28, "credit_spreads": 12,
+          "energy_costs": 60, "data_wall": 28, "narrative": 65
+        }
+      },
+      {
+        "week": "2007-03-05",
+        "signals": {
+          "demand_reality": 35, "erp_valuation": 72, "retail_fomo": 60,
+          "m2_liquidity": 72, "gpu_spot": 25, "credit_spreads": 18,
+          "energy_costs": 68, "data_wall": 25, "narrative": 72
+        }
+      }
+    ]
+  },
+  {
+    "episode_id": "crypto_2017",
+    "name": "Crypto Bubble 2017",
+    "sector": "Cryptocurrency",
+    "peak_date": "2017-12-17",
+    "episode_start": "2017-01-01",
+    "episode_end": "2018-12-31",
+    "max_drawdown_pct": -84,
+    "weekly_vectors": [
+      {
+        "week": "2017-06-05",
+        "signals": {
+          "demand_reality": 50, "erp_valuation": 58, "retail_fomo": 70,
+          "m2_liquidity": 45, "gpu_spot": 72, "credit_spreads": 28,
+          "energy_costs": 35, "data_wall": 38, "narrative": 78
+        }
+      },
+      {
+        "week": "2017-10-02",
+        "signals": {
+          "demand_reality": 52, "erp_valuation": 62, "retail_fomo": 82,
+          "m2_liquidity": 42, "gpu_spot": 80, "credit_spreads": 25,
+          "energy_costs": 38, "data_wall": 35, "narrative": 88
+        }
+      },
+      {
+        "week": "2017-12-04",
+        "signals": {
+          "demand_reality": 55, "erp_valuation": 65, "retail_fomo": 95,
+          "m2_liquidity": 40, "gpu_spot": 90, "credit_spreads": 22,
+          "energy_costs": 40, "data_wall": 32, "narrative": 96
+        }
+      }
+    ]
+  },
+  {
+    "episode_id": "crypto_2021",
+    "name": "Crypto Bubble 2021",
+    "sector": "Cryptocurrency",
+    "peak_date": "2021-11-10",
+    "episode_start": "2020-01-01",
+    "episode_end": "2022-12-31",
+    "max_drawdown_pct": -77,
+    "weekly_vectors": [
+      {
+        "week": "2021-01-04",
+        "signals": {
+          "demand_reality": 58, "erp_valuation": 70, "retail_fomo": 72,
+          "m2_liquidity": 78, "gpu_spot": 68, "credit_spreads": 20,
+          "energy_costs": 30, "data_wall": 52, "narrative": 75
+        }
+      },
+      {
+        "week": "2021-04-05",
+        "signals": {
+          "demand_reality": 65, "erp_valuation": 75, "retail_fomo": 88,
+          "m2_liquidity": 80, "gpu_spot": 82, "credit_spreads": 18,
+          "energy_costs": 32, "data_wall": 50, "narrative": 85
+        }
+      },
+      {
+        "week": "2021-10-04",
+        "signals": {
+          "demand_reality": 70, "erp_valuation": 78, "retail_fomo": 92,
+          "m2_liquidity": 75, "gpu_spot": 88, "credit_spreads": 20,
+          "energy_costs": 35, "data_wall": 48, "narrative": 90
+        }
+      }
+    ]
+  },
+  {
+    "episode_id": "biotech_2015",
+    "name": "Biotech Bubble 2015",
+    "sector": "Biotechnology",
+    "peak_date": "2015-07-20",
+    "episode_start": "2013-01-01",
+    "episode_end": "2016-06-01",
+    "max_drawdown_pct": -35,
+    "weekly_vectors": [
+      {
+        "week": "2014-06-02",
+        "signals": {
+          "demand_reality": 60, "erp_valuation": 62, "retail_fomo": 60,
+          "m2_liquidity": 50, "gpu_spot": 35, "credit_spreads": 25,
+          "energy_costs": 42, "data_wall": 30, "narrative": 68
+        }
+      },
+      {
+        "week": "2015-04-06",
+        "signals": {
+          "demand_reality": 65, "erp_valuation": 70, "retail_fomo": 72,
+          "m2_liquidity": 48, "gpu_spot": 38, "credit_spreads": 22,
+          "energy_costs": 45, "data_wall": 28, "narrative": 78
+        }
+      }
+    ]
+  }
+]

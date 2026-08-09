@@ -1,34 +1,59 @@
-"""FACTOR 1: GPU spot prices (Vast.ai free API)."""
+"""FACTOR: gpu_spot — Vast.ai RTX 4090 median rental price (PRD §3.2.5).
+
+Low GPU price = high risk (supply caught up, demand softening).
+score = 100 - percentile_rank(median_price, window=5yr)
+"""
 from __future__ import annotations
 
-import datetime
-import logging
+from datetime import datetime
 
 import requests
 
-from ..core.scoring import normalize_score, safe_execute
+from ..core.scoring import safe_execute
+from ..core.types import RawFetch
+
+FACTOR_ID = "gpu_spot"
+VAST_API_URL = "https://cloud.vast.ai/api/v0/bundles/"
 
 
-def _fetch_gpu_score() -> int:
-    """Shared fetch logic for current RTX 4090 spot price."""
-    params = {"q": '{"external":{"eq":false},"gpu_name":{"eq":"RTX_4090"}}'}
-    url = "https://console.vast.ai/api/v0/bundles/"
-    res = requests.get(url, params=params).json()
-    if "offers" not in res:
-        logging.error(f"Unexpected API response: {res}")
-        return 50
-    prices = [offer["dph_base"] for offer in res["offers"]]
-    avg_price = sum(prices) / len(prices) if prices else 0.50
-    return normalize_score(avg_price, healthy_baseline=0.50, danger_threshold=0.20)
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="Vast.ai fetch failed"))
+def fetch_gpu_spot() -> RawFetch:
+    """
+    Fetch RTX 4090 spot prices from Vast.ai and return the median cost/hr.
+    PRD ref: §3.2.5
+    """
+    # Vast.ai uses query params directly, not a JSON string
+    params = {
+        "gpu_name": "RTX 4090",
+        "order": "score-",
+        "limit": 50,
+    }
+    resp = requests.get(
+        VAST_API_URL,
+        params=params,
+        headers={"User-Agent": "ai-bubble-tracker/1.0"},
+        timeout=30,
+    )
+    resp.raise_for_status()
+    data = resp.json()
 
+    offers = data.get("offers", [])
+    if not offers:
+        raise ValueError("No RTX 4090 offers returned from Vast.ai")
 
-@safe_execute(default_val=50)
-def get_gpu_risk() -> int:
-    return _fetch_gpu_score()
+    prices = sorted(
+        float(o["dph_total"])
+        for o in offers
+        if o.get("dph_total") is not None
+    )
+    if not prices:
+        raise ValueError("No valid price data in Vast.ai offers")
 
+    mid = len(prices) // 2
+    median_price = prices[mid] if len(prices) % 2 != 0 else (prices[mid - 1] + prices[mid]) / 2
 
-@safe_execute(default_val={})
-def get_gpu_risk_series(days: int = 14) -> dict[str, int]:
-    """Returns only today's score — Vast.ai has no historical API."""
-    today = datetime.date.today().isoformat()
-    return {today: _fetch_gpu_score()}
+    return RawFetch(
+        factor_id=FACTOR_ID,
+        raw_value=round(median_price, 4),
+        fetched_at=datetime.utcnow(),
+    )
