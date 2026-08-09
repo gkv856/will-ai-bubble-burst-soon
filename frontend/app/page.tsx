@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { CompositeScore } from "@/components/dashboard/CompositeScore";
 import { HistoryChart } from "@/components/dashboard/HistoryChart";
@@ -8,133 +5,53 @@ import { ConfidenceBar } from "@/components/dashboard/ConfidenceBar";
 import { SignalGrid } from "@/components/dashboard/SignalGrid";
 import { AnalogPanel } from "@/components/dashboard/AnalogPanel";
 import { WarningBanner } from "@/components/dashboard/WarningBanner";
+import { RefreshButton } from "@/components/dashboard/RefreshButton";
 import { fetchLatestScores, fetchHistory } from "@/lib/api";
-import type { LatestScores, HistoryEntry } from "@/lib/api";
 import {
   Activity,
   GitBranch,
-  RefreshCw,
   AlertTriangle,
   CheckCircle,
   ArrowRight,
 } from "lucide-react";
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+import { getStatusColor, getStatusLabel } from "@/lib/status-utils";
+import { StatusIcon } from "@/components/dashboard/StatusIcon";
+import { TickerBar } from "@/components/dashboard/TickerBar";
 
-function getStatusColor(score: number) {
-  if (score < 30) return "#10b981";
-  if (score < 50) return "#84cc16";
-  if (score < 70) return "#f59e0b";
-  if (score < 85) return "#f97316";
-  return "#ef4444";
-}
+export const revalidate = 3600;
 
-function getStatusLabel(score: number | null): string {
-  if (score === null) return "Loading";
-  if (score < 30) return "Healthy";
-  if (score < 50) return "Moderate";
-  if (score < 70) return "Elevated Risk";
-  if (score < 85) return "Bubble Territory";
-  return "Extreme Risk";
-}
+// ── Main page (Server Component) ───────────────────────────────────────────────
 
-const StatusIcon = ({ score }: { score: number | null }) => {
-  if (score === null)
-    return <Activity className="w-4 h-4 text-blue-400 animate-pulse" />;
-  if (score < 40) return <CheckCircle className="w-4 h-4 text-emerald-400" />;
-  return <AlertTriangle className="w-4 h-4 text-yellow-400" />;
-};
-
-// ── Ticker ────────────────────────────────────────────────────────────────────
-
-const TICKER_ITEMS = [
-  { label: "Demand Reality", key: "demand_reality" },
-  { label: "ERP Valuation", key: "erp_valuation" },
-  { label: "Retail FOMO", key: "retail_fomo" },
-  { label: "M2 Liquidity", key: "m2_liquidity" },
-  { label: "GPU Spot", key: "gpu_spot" },
-  { label: "Credit Spreads", key: "credit_spreads" },
-  { label: "Energy Costs", key: "energy_costs" },
-  { label: "Data Wall", key: "data_wall" },
-  { label: "Narrative", key: "narrative" },
-];
-
-const TickerBar = ({ signals }: { signals: Record<string, number> | null }) => {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
-  return (
-    <div
-      className="border-y border-white/[0.06] bg-white/[0.015] overflow-hidden py-2"
-      aria-label="Live signal ticker"
-    >
-      <div className="ticker-track">
-        {items.map((item, i) => {
-          const val = signals?.[item.key] ?? null;
-          const color = val !== null ? getStatusColor(val) : "#4b5563";
-          return (
-            <span
-              key={i}
-              className="flex items-center gap-2 px-6 text-xs font-mono whitespace-nowrap"
-            >
-              <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
-              <span className="text-slate-400">{item.label}</span>
-              <span className="font-semibold" style={{ color }}>
-                {val !== null ? `${val}` : "--"}
-              </span>
-              <span className="text-white/10 px-2">|</span>
-            </span>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
-
-// ── Main page ─────────────────────────────────────────────────────────────────
-
-export default function Home() {
-  const [latest, setLatest] = useState<LatestScores | null>(null);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
-
-  const loadData = useCallback(async () => {
-    try {
-      setError(null);
-      const [latestData, historyData] = await Promise.all([
-        fetchLatestScores(),
-        fetchHistory(52),
-      ]);
-      setLatest(latestData);
-      setHistory(historyData.data);
-      setLastRefresh(new Date());
-    } catch (err) {
-      setError("Could not load data from the API. Is the backend running?");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    loadData();
-    // Poll every 5 minutes
-    const interval = setInterval(loadData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [loadData]);
+export default async function Home() {
+  const [latest, historyResp] = await Promise.all([
+    fetchLatestScores(),
+    fetchHistory(52),
+  ]);
+  const history = historyResp.data;
 
   const score = latest?.composite_score ?? null;
-  const signalMap = latest
-    ? Object.fromEntries(latest.signals.map((s) => [s.factor_id, s.score ?? 0]))
+  const signalMap = latest?.signals && Array.isArray(latest.signals)
+    ? Object.fromEntries(latest.signals.map((s: any) => [s.factor_id, s.score ?? 0]))
     : null;
 
   // Build sparkline data from history (last 12 entries per factor)
   const sparklineData: Record<string, number[]> = {};
-  if (history.length > 0 && latest) {
+  if (history.length > 0 && latest?.signals) {
     for (const fid of latest.signals.map((s) => s.factor_id)) {
       sparklineData[fid] = history
         .slice(-12)
-        .map((h) => h.signals[fid] ?? 0)
-        .filter((v) => v !== null) as number[];
+        .map((h: any) => {
+          if (Array.isArray(h.signals)) {
+            const sig = h.signals.find((s: any) => s.factor_id === fid);
+            return sig?.score ?? 0;
+          }
+          if (h.factors) {
+            return h.factors[fid] ?? 0;
+          }
+          return 0;
+        })
+        .filter((v: number) => v !== null);
     }
   }
 
@@ -170,13 +87,7 @@ export default function Home() {
             </span>
           </div>
 
-          <button
-            onClick={loadData}
-            className="text-white/40 hover:text-white/70 transition-colors"
-            aria-label="Refresh data"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
+          <RefreshButton />
 
           <Link
             href="/details"
@@ -252,21 +163,9 @@ export default function Home() {
           </div>
         )}
 
-        {isLoading && (
-          <div className="flex items-center justify-center gap-2 text-white/40 text-sm">
-            <RefreshCw className="w-4 h-4 animate-spin" />
-            Loading signals...
-          </div>
-        )}
-        {error && (
+        {!latest && (
           <div className="mt-4 flex flex-col items-center gap-2">
-            <p className="text-red-400 text-sm font-mono">{error}</p>
-            <button
-              onClick={loadData}
-              className="text-xs font-mono text-white/40 hover:text-white/70 underline"
-            >
-              Retry
-            </button>
+            <p className="text-red-400 text-sm font-mono">Could not load data. Run the pipeline first.</p>
           </div>
         )}
       </section>
@@ -279,7 +178,7 @@ export default function Home() {
         {latest && (
           <WarningBanner
             verdict={latest.quality_verdict}
-            staleSignals={latest.stale_signals}
+            staleSignals={latest.stale_signals || []}
           />
         )}
 
@@ -307,8 +206,8 @@ export default function Home() {
         {/* Analog panel */}
         {latest?.analogs && (
           <AnalogPanel
-            bubbleAnalogs={latest.analogs.bubble}
-            boomAnalogs={latest.analogs.boom}
+            bubbleAnalogs={latest.analogs.bubble_matches || []}
+            boomAnalogs={latest.analogs.boom_matches || []}
             adjustedRisk={latest.analogs.adjusted_risk}
             adjustmentReason={latest.analogs.adjustment_reason}
           />

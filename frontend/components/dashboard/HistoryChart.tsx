@@ -13,7 +13,7 @@ interface HistoryChartProps {
 function CustomTooltip({ active, payload, label }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
   
-  const activePayload = payload.find(p => p.dataKey === "score") || payload.find(p => p.dataKey === "futureScore");
+  const activePayload = payload.find(p => p.dataKey === "displayScore") || payload.find(p => p.dataKey === "futureScore");
   if (!activePayload) return null;
 
   const score = activePayload.value as number;
@@ -42,14 +42,14 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
   }
 
   // Build chart data including future predictions
-  const chartData: any[] = historyData.map(d => ({ ...d, label: entryLabel(d) }));
+  const chartData: any[] = historyData.map(d => ({ ...d, label: entryLabel(d), displayScore: (d as any).score ?? (d as any).composite_score ?? 0 }));
   
   const latestData = historyData[historyData.length - 1];
   const compositePreds = latestData?.aiPredictions?.composite?.scores;
   
   if (compositePreds && compositePreds.length === 3) {
-    // To connect the lines, the last historical day needs futureScore equal to its score
-    chartData[chartData.length - 1].futureScore = chartData[chartData.length - 1].score;
+    // To connect the lines, the last historical day needs futureScore equal to its displayScore
+    chartData[chartData.length - 1].futureScore = chartData[chartData.length - 1].displayScore;
     
     // Add 3 future days
     for (let i = 0; i < 3; i++) {
@@ -62,7 +62,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
   }
 
   // Calculate dynamic gradient offsets based on the line's bounding box
-  const scores = historyData.map(d => d.score);
+  const scores = chartData.map(d => d.displayScore).filter(s => s !== undefined);
   const dataMax = Math.max(...scores);
   const dataMin = Math.min(...scores);
   const range = dataMax - dataMin || 1;
@@ -129,7 +129,7 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
             <Tooltip content={CustomTooltip} cursor={{ stroke: "rgba(255,255,255,0.08)", strokeWidth: 1 }} />
             <Line
               type="monotone"
-              dataKey="score"
+              dataKey="displayScore"
               stroke="url(#colorScore)"
               strokeWidth={2.5}
               dot={{ fill: "transparent", strokeWidth: 0, r: 3 }}

@@ -1,301 +1,194 @@
 [
   {
-    "dayId": "2026-07-20",
-    "timestamp": 1784505600,
-    "factors": {
-      "demand": 50,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 77,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
+    "run_id": "a4486f98-6bc2-44d2-bedc-36688abd70fc",
+    "run_date": "2026-08-09T05:59:11.795844",
+    "dayId": "2026-08-09",
+    "composite_score": 50,
+    "composite_lower": 10.3,
+    "composite_upper": 89.7,
+    "quality_verdict": "RED",
+    "confidence_interval": {
+      "lower": 10.3,
+      "upper": 89.7,
+      "std_dev": 20.25,
+      "degradation_multiplier": 20.25,
+      "confidence_level": "95%"
     },
-    "score": 63
-  },
-  {
-    "dayId": "2026-07-21",
-    "timestamp": 1784592000,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 84,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
+    "correlation_penalty": 0,
+    "low_confidence": true,
+    "stale_signals": [
+      "gpu_spot",
+      "energy_costs",
+      "data_wall",
+      "narrative"
+    ],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
     },
-    "score": 74
-  },
-  {
-    "dayId": "2026-07-22",
-    "timestamp": 1784678400,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 90,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 74
-  },
-  {
-    "dayId": "2026-07-23",
-    "timestamp": 1784764800,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 100,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 75
-  },
-  {
-    "dayId": "2026-07-24",
-    "timestamp": 1784851200,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 100,
-      "liquidity": 100,
-      "behavioral": 0,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 67
-  },
-  {
-    "dayId": "2026-07-27",
-    "timestamp": 1785110400,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 77,
-      "liquidity": 100,
-      "behavioral": 0,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 66
-  },
-  {
-    "dayId": "2026-07-28",
-    "timestamp": 1785196800,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 63,
-      "liquidity": 100,
-      "behavioral": 0,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 65
-  },
-  {
-    "dayId": "2026-07-29",
-    "timestamp": 1785283200,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 84,
-      "liquidity": 100,
-      "behavioral": 0,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 66
-  },
-  {
-    "dayId": "2026-07-30",
-    "timestamp": 1785369600,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 80,
-      "liquidity": 100,
-      "behavioral": 0,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 66
-  },
-  {
-    "dayId": "2026-07-31",
-    "timestamp": 1785456000,
-    "factors": {
-      "demand": 100,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 84,
-      "liquidity": 100,
-      "behavioral": 0,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 66
-  },
-  {
-    "dayId": "2026-08-03",
-    "timestamp": 1785715200,
-    "factors": {
-      "demand": 50,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 67,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 63
-  },
-  {
-    "dayId": "2026-08-04",
-    "timestamp": 1785801600,
-    "factors": {
-      "demand": 50,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 50,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 62
-  },
-  {
-    "dayId": "2026-08-05",
-    "timestamp": 1785888000,
-    "factors": {
-      "demand": 50,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 50,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 62
-  },
-  {
-    "dayId": "2026-08-06",
-    "timestamp": 1785974400,
-    "factors": {
-      "demand": 50,
-      "credit": 0,
-      "valuation": 100,
-      "energy": 50,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 62
-  },
-  {
-    "dayId": "2026-08-07",
-    "timestamp": 1786060800,
-    "factors": {
-      "demand": 100,
-      "credit": 50,
-      "valuation": 50,
-      "energy": 50,
-      "liquidity": 100,
-      "behavioral": 50,
-      "gpu": 50,
-      "datawall": 50
-    },
-    "score": 67,
-    "aiPredictions": {
-      "composite": {
-        "scores": [
-          68,
-          70,
-          72
-        ],
-        "reason": "Overall risk is increasing slightly across sectors."
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 50,
+        "raw_value": 0.1762,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
       },
-      "demand": {
-        "scores": [
-          85,
-          86,
-          86
-        ],
-        "reason": "Hardware demand remains high."
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 50,
+        "raw_value": -0.8511,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
       },
-      "valuation": {
-        "scores": [
-          60,
-          61,
-          61
-        ],
-        "reason": "Equities slightly adjusting."
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 50,
+        "raw_value": 14.67,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
       },
-      "behavioral": {
-        "scores": [
-          90,
-          93,
-          95
-        ],
-        "reason": "Retail FOMO is spiking hard."
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 50,
+        "raw_value": 5.7526,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
       },
-      "liquidity": {
-        "scores": [
-          30,
-          30,
-          31
-        ],
-        "reason": "Liquidity is drying up."
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": null,
+        "raw_value": null,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": true,
+        "error_message": "Vast.ai fetch failed",
+        "weight_used": 0.1111111111111111
       },
-      "gpu": {
-        "scores": [
-          75,
-          75,
-          75
-        ],
-        "reason": "Spot prices stabilizing."
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 50,
+        "raw_value": 2.71,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
       },
-      "credit": {
-        "scores": [
-          40,
-          42,
-          44
-        ],
-        "reason": "Spreads widening slowly."
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": null,
+        "raw_value": null,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": true,
+        "error_message": "FRED fetch failed",
+        "weight_used": 0.1111111111111111
       },
-      "energy": {
-        "scores": [
-          50,
-          50,
-          49
-        ],
-        "reason": "Oil prices slightly down."
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": true,
+        "error_message": "Epoch AI unavailable — stub value",
+        "weight_used": 0.1111111111111111
       },
-      "datawall": {
-        "scores": [
-          95,
-          96,
-          96
-        ],
-        "reason": "Compute scaling hitting a wall."
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 50,
+        "raw_value": 0.4,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": true,
+        "error_message": "Finnhub API key not configured or fetch failed — stub value",
+        "weight_used": 0.1111111111111111
       }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "biotech_2015",
+          "episode_name": "Biotech Bubble 2015",
+          "week_matched": "2014-06-02",
+          "similarity": 0.956,
+          "weeks_to_peak": 59,
+          "max_drawdown_pct": -35
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-06-05",
+          "similarity": 0.953,
+          "weeks_to_peak": 27,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "dotcom_1998_2000",
+          "episode_name": "Dot-Com Bubble",
+          "week_matched": "1998-06-01",
+          "similarity": 0.952,
+          "weeks_to_peak": 92,
+          "max_drawdown_pct": -78
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.971,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.971,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.968,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "BOOM",
+      "adjustment_reason": "Boom analog dominates (0.97 vs 0.96)."
     }
   }
 ]

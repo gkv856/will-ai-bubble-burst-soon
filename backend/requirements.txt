@@ -7,17 +7,8 @@ scipy>=1.13.0
 yfinance>=0.2.36
 requests>=2.31.0
 
-# FastAPI backend
-fastapi>=0.111.0
-uvicorn[standard]>=0.30.0
-httpx>=0.27.0
-
-# Database
-sqlalchemy>=2.0.30
-alembic>=1.13.0
-
-# For SQLite (local dev); swap driver for PostgreSQL in prod
-# psycopg2-binary>=2.9.9  # uncomment for PostgreSQL
+# Testing
+pytest>=8.0.0
 
 # Scheduling
 apscheduler>=3.10.4

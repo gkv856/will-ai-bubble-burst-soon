@@ -1,91 +1,43 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { FactorCard } from "@/components/dashboard/FactorCard";
 import { EmailSignup } from "@/components/dashboard/EmailSignup";
-import { entryLabel } from "@/lib/types";
-import type { WeekData } from "@/lib/types";
+import { fetchLatestScores } from "@/lib/api";
 import {
   Activity,
   GitBranch,
-  RefreshCw,
   TrendingUp,
   ArrowLeft,
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
 
+// The MathBreakdown uses dynamic import (client side)
 const MathBreakdown = dynamic(
   () =>
     import("@/components/dashboard/MathBreakdown").then((m) => m.MathBreakdown),
   { ssr: false },
 );
 
-// ── Methodology card ──────────────────────────────────────────────────────────
-const MethodologyCard = ({
-  id,
-  title,
-  desc,
-  weight,
-}: {
-  id: string;
-  title: string;
-  desc: string;
-  weight: string;
-}) => (
-  <div className="glass-card rounded-xl p-4 cursor-default">
-    <div className="flex items-start justify-between gap-3 mb-2">
-      <span className="text-xs font-mono text-blue-400 uppercase tracking-widest">
-        {id}
-      </span>
-      <span className="text-xs font-mono text-white/30 shrink-0">{weight}</span>
-    </div>
-    <p className="text-sm font-semibold text-white/90 mb-1 font-mono">
-      {title}
-    </p>
-    <p className="text-xs text-white/40 leading-relaxed">{desc}</p>
-  </div>
-);
+import { MethodologyCard } from "@/components/dashboard/MethodologyCard";
+import { StatusIcon } from "@/components/dashboard/StatusIcon";
 
-function getStatusColor(score: number) {
-  if (score < 40) return "#10b981";
-  if (score < 70) return "#f59e0b";
-  return "#ef4444";
-}
+export const revalidate = 3600;
 
-const StatusIcon = ({ score }: { score: number | null }) => {
-  if (score === null)
-    return <Activity className="w-4 h-4 text-blue-400 animate-pulse" />;
-  if (score < 40) return <CheckCircle className="w-4 h-4 text-emerald-400" />;
-  if (score < 70) return <AlertTriangle className="w-4 h-4 text-yellow-400" />;
-  return <AlertTriangle className="w-4 h-4 text-red-400" />;
-};
+// ── Details page (Server Component) ──────────────────────────────────────────
+export default async function DetailsPage() {
+  const latest = await fetchLatestScores();
+  const compositeScore = latest?.composite_score ?? null;
+  const signalMap = latest?.signals && Array.isArray(latest.signals)
+    ? Object.fromEntries(latest.signals.map((s) => [s.factor_id, s.score ?? null]))
+    : {};
 
-// ── Details page ─────────────────────────────────────────────────────────────
-export default function DetailsPage() {
-  const [latestData, setLatestData] = useState<WeekData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/data.json");
-        if (!response.ok) throw new Error("Data not found");
-        const json = await response.json();
-        if (json.length > 0) setLatestData(json[json.length - 1]);
-      } catch {
-        setError("Could not load data.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-
-  const compositeScore = latestData?.score ?? null;
+  const runDate = latest?.run_date
+    ? new Date(latest.run_date).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      })
+    : "";
 
   return (
     <div className="relative min-h-screen text-white overflow-x-hidden">
@@ -118,7 +70,7 @@ export default function DetailsPage() {
           <div className="flex items-center gap-2 text-xs font-mono">
             <StatusIcon score={compositeScore} />
             <span className="text-white/40">
-              {latestData ? entryLabel(latestData) : "—"}
+              {runDate || "—"}
             </span>
           </div>
           <a
@@ -137,7 +89,7 @@ export default function DetailsPage() {
       {/* ── PAGE HEADER ────────────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-24 pb-10 animate-fade-up">
         <div className="inline-flex items-center gap-2 text-xs font-mono px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white/50 mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />8 macro
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />9 macro
           signals · full breakdown
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
@@ -146,25 +98,19 @@ export default function DetailsPage() {
         <p className="text-white/40 text-sm font-mono max-w-xl">
           Individual factor scores, scoring methodology, and the composite
           calculation — as of{" "}
-          {latestData ? entryLabel(latestData) : "latest data"}.
+          {runDate || "latest data"}.
         </p>
       </section>
 
       <div className="section-divider mx-6 mb-10" />
 
-      {isLoading && (
-        <div className="flex items-center justify-center gap-2 text-white/40 text-sm py-20">
-          <RefreshCw className="w-4 h-4 animate-spin" />
-          Loading signals...
-        </div>
-      )}
-      {error && (
+      {!latest && (
         <p className="text-center text-red-400 text-sm font-mono py-20">
-          {error}
+          Could not load data.
         </p>
       )}
 
-      {!isLoading && !error && (
+      {latest && (
         <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-24 space-y-12">
           {/* ── Factor grid ── */}
           <section aria-labelledby="signals-heading">
@@ -180,59 +126,57 @@ export default function DetailsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               <FactorCard
                 title="GPU Spot Prices"
-                score={latestData?.factors?.gpu ?? null}
+                score={signalMap.gpu ?? null}
                 id="gpu"
-                desc="RTX 4090 rental cost on Vast.ai vs historical baseline."
-                aiPrediction={latestData?.aiPredictions?.gpu}
+                desc="RTX 4090 rental cost vs historical baseline."
               />
               <FactorCard
                 title="Credit Spreads"
-                score={latestData?.factors?.credit ?? null}
+                score={signalMap.credit ?? null}
                 id="credit"
                 desc="Investment-grade bond spread (BAMLC0A0CM) from FRED."
-                aiPrediction={latestData?.aiPredictions?.credit}
               />
               <FactorCard
                 title="Energy Costs"
-                score={latestData?.factors?.energy ?? null}
+                score={signalMap.energy ?? null}
                 id="energy"
-                desc="WTI crude oil price (FRED DCOILWTICO) — energy cost pressure on AI data centres."
-                aiPrediction={latestData?.aiPredictions?.energy}
+                desc="WTI crude oil price — energy cost pressure on AI data centres."
               />
               <FactorCard
                 title="Demand Reality"
-                score={latestData?.factors?.demand ?? null}
+                score={signalMap.demand ?? null}
                 id="demand"
                 desc="IGV/SMH ratio — software demand vs. hardware speculation."
-                aiPrediction={latestData?.aiPredictions?.demand}
               />
               <FactorCard
                 title="Data Wall"
-                score={latestData?.factors?.datawall ?? null}
+                score={signalMap.datawall ?? null}
                 id="datawall"
                 desc="Risk from AI training data exhaustion."
-                aiPrediction={latestData?.aiPredictions?.datawall}
               />
               <FactorCard
                 title="ERP Valuation"
-                score={latestData?.factors?.valuation ?? null}
+                score={signalMap.valuation ?? null}
                 id="valuation"
-                desc="S&P 500 earnings yield vs. the 10-year Treasury yield."
-                aiPrediction={latestData?.aiPredictions?.valuation}
+                desc="S&P 500 earnings yield vs. 10-year Treasury yield."
               />
               <FactorCard
                 title="Retail FOMO"
-                score={latestData?.factors?.behavioral ?? null}
+                score={signalMap.behavioral ?? null}
                 id="behavioral"
                 desc='Google Trends for "Nvidia options" + "AI investing".'
-                aiPrediction={latestData?.aiPredictions?.behavioral}
               />
               <FactorCard
                 title="Liquidity"
-                score={latestData?.factors?.liquidity ?? null}
+                score={signalMap.liquidity ?? null}
                 id="liquidity"
-                desc="Overnight reverse repo volume (FRED RRPONTSYD) — tracks loose liquidity fuelling risk assets."
-                aiPrediction={latestData?.aiPredictions?.liquidity}
+                desc="Overnight reverse repo volume — tracks loose liquidity."
+              />
+              <FactorCard
+                title="Narrative"
+                score={signalMap.narrative ?? null}
+                id="narrative"
+                desc="Epoch AI narrative tracking."
               />
             </div>
           </section>
@@ -305,7 +249,7 @@ export default function DetailsPage() {
           <div className="section-divider" />
 
           {/* ── Math deep-dive ── */}
-          <MathBreakdown latestData={latestData} />
+          <MathBreakdown latestData={latest as any} />
 
           <div className="section-divider" />
 

@@ -49,7 +49,7 @@ data/                           # Screenshots for README
 
 ## Architecture Invariants
 
-1. **data.json is the single source of truth.** Backend writes it; frontend reads it. No other data exchange path exists between the two.
+1. **STRICT RULE: data.json is the single source of truth.** Backend writes it; frontend reads it. No API servers, no databases (e.g. SQLite), and no complex backends are allowed. The data layer MUST remain a simple static `.json` file to keep the architecture lean and zero-cost. No other data exchange path exists between the two.
 2. **Each factor is a standalone module** under `backend/pipeline/factors/`. It fetches its own data, scores it 0–100, and returns an int. No factor knows about any other factor.
 3. **Weights live in the orchestrator**, not in individual factors. The composite formula is in `orchestrator.py`.
 4. **The pipeline is idempotent per week.** Running it twice in the same ISO week upserts (replaces) rather than appending a duplicate entry.

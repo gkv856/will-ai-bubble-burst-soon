@@ -26,9 +26,7 @@ logger = logging.getLogger(__name__)
 STALENESS_DAYS = 14  # PRD §3.3
 
 
-def _get_db_session():
-    from app.db.session import SessionLocal
-    return SessionLocal()
+from pipeline.storage.history import load_history, upsert_entry, save_history
 
 
 # ── Step 9: Store results ─────────────────────────────────────────────────────
@@ -44,147 +42,89 @@ def _store_pipeline_run(
     corr_penalty: float,
     quality_verdict: str,
 ) -> None:
-    from app.db.models import AnalogMatch, PipelineRun, SignalScore
-
-    db = _get_db_session()
-    try:
-        run = PipelineRun(
-            id=run_id,
-            run_date=run_date,
-            composite_score=composite_result.get("composite_score"),
-            composite_lower=confidence.get("lower"),
-            composite_upper=confidence.get("upper"),
-            composite_std_dev=confidence.get("std_dev"),
-            degradation_multiplier=confidence.get("degradation_multiplier"),
-            correlation_penalty=round(corr_penalty, 2),
-            weights_used=weights,
-            quality_verdict=quality_verdict,
-            low_confidence=(quality_verdict == "RED"),
-        )
-        db.add(run)
-
-        for fid, output in signal_outputs.items():
-            ss = SignalScore(
-                id=str(uuid.uuid4()),
-                run_id=run_id,
-                factor_id=fid,
-                raw_value=output.raw_value,
-                score=output.score,
-                velocity_4wk=output.velocity_4wk,
-                velocity_12wk=output.velocity_12wk,
-                fetched_at=output.fetched_at,
-                stale=output.stale,
-                error_message=output.error_message,
-            )
-            db.add(ss)
-
-        # Store analogs
-        for atype in ("bubble", "boom"):
-            for a in analog_result.get(f"{atype}_analogs", []):
-                am = AnalogMatch(
-                    id=str(uuid.uuid4()),
-                    run_id=run_id,
-                    library_type=atype,
-                    episode_id=a.get("episode_id"),
-                    episode_name=a.get("episode_name"),
-                    week_matched=a.get("week_matched"),
-                    similarity=a.get("similarity"),
-                    weeks_to_peak=a.get("weeks_to_peak"),
-                    max_drawdown_pct=a.get("max_drawdown_pct"),
-                )
-                db.add(am)
-
-        db.commit()
-        logger.info(f"Pipeline run {run_id[:8]}… stored to DB.")
-    except Exception as e:
-        db.rollback()
-        logger.error(f"Failed to store pipeline run: {e}")
-        raise
-    finally:
-        db.close()
+    history = load_history()
+    entry = {
+        "run_id": run_id,
+        "run_date": run_date.isoformat(),
+        "dayId": run_date.strftime("%Y-%m-%d"),
+        "composite_score": composite_result.get("composite_score"),
+        "composite_lower": confidence.get("lower"),
+        "composite_upper": confidence.get("upper"),
+        "quality_verdict": quality_verdict,
+        "confidence_interval": confidence,
+        "correlation_penalty": round(corr_penalty, 2),
+        "low_confidence": (quality_verdict == "RED"),
+        "stale_signals": [fid for fid, s in signal_outputs.items() if s.stale],
+        "weights_used": weights,
+        "signals": [
+            {
+                "factor_id": fid,
+                "name": SIGNAL_REGISTRY[fid]["name"],
+                "score": s.score,
+                "raw_value": s.raw_value,
+                "velocity_4wk": s.velocity_4wk,
+                "velocity_12wk": s.velocity_12wk,
+                "stale": s.stale,
+                "error_message": s.error_message,
+                "weight_used": weights.get(fid),
+            }
+            for fid, s in signal_outputs.items()
+        ],
+        "analogs": analog_result,
+    }
+    history = upsert_entry(history, entry)
+    save_history(history)
+    logger.info(f"Pipeline run {run_id[:8]}… stored to data.json.")
 
 
 # ── Historical data helpers ───────────────────────────────────────────────────
 
 def _load_raw_history(factor_id: str, limit: int = 260) -> list[float]:
-    """Load historical raw_values for a factor from the DB (oldest first)."""
-    from app.db.models import PipelineRun, SignalScore
-    db = _get_db_session()
-    try:
-        rows = (
-            db.query(SignalScore.raw_value, PipelineRun.run_date)
-            .join(PipelineRun, SignalScore.run_id == PipelineRun.id)
-            .filter(SignalScore.factor_id == factor_id, SignalScore.raw_value.isnot(None))
-            .order_by(PipelineRun.run_date.asc())
-            .limit(limit)
-            .all()
-        )
-        return [float(r.raw_value) for r in rows]
-    finally:
-        db.close()
+    """Load historical raw_values for a factor from data.json (oldest first)."""
+    history = load_history()
+    history = sorted(history, key=lambda e: e.get("run_date", ""))
+    
+    raw_values = []
+    for run in history:
+        for s in run.get("signals", []):
+            if s.get("factor_id") == factor_id and s.get("raw_value") is not None:
+                raw_values.append(float(s["raw_value"]))
+    return raw_values[-limit:]
 
 
 def _load_score_history(factor_id: str, limit: int = 52) -> list[float]:
     """Load historical scores for velocity computation (oldest first)."""
-    from app.db.models import PipelineRun, SignalScore
-    db = _get_db_session()
-    try:
-        rows = (
-            db.query(SignalScore.score, PipelineRun.run_date)
-            .join(PipelineRun, SignalScore.run_id == PipelineRun.id)
-            .filter(SignalScore.factor_id == factor_id, SignalScore.score.isnot(None))
-            .order_by(PipelineRun.run_date.asc())
-            .limit(limit)
-            .all()
-        )
-        return [float(r.score) for r in rows]
-    finally:
-        db.close()
+    history = load_history()
+    history = sorted(history, key=lambda e: e.get("run_date", ""))
+    
+    scores = []
+    for run in history:
+        for s in run.get("signals", []):
+            if s.get("factor_id") == factor_id and s.get("score") is not None:
+                scores.append(float(s["score"]))
+    return scores[-limit:]
 
 
 def _load_scores_matrix(limit: int = 12) -> np.ndarray:
     """Load last N weeks of all 9 signal scores as a (N, 9) matrix."""
-    from app.db.models import PipelineRun, SignalScore
-    db = _get_db_session()
-    try:
-        runs = (
-            db.query(PipelineRun.id)
-            .order_by(PipelineRun.run_date.desc())
-            .limit(limit)
-            .all()
-        )
-        run_ids = [r.id for r in runs]
-        if not run_ids:
-            return np.array([])
-
-        all_scores = (
-            db.query(SignalScore)
-            .filter(SignalScore.run_id.in_(run_ids))
-            .all()
-        )
-        # Build matrix
-        by_run: dict[str, dict[str, float]] = {rid: {} for rid in run_ids}
-        for s in all_scores:
-            if s.score is not None:
-                by_run[s.run_id][s.factor_id] = float(s.score)
-
-        matrix_rows = []
-        for rid in reversed(run_ids):  # oldest first
-            row = [by_run[rid].get(fid, float("nan")) for fid in FACTOR_IDS]
-            matrix_rows.append(row)
-
-        return np.array(matrix_rows)
-    finally:
-        db.close()
+    history = load_history()
+    history = sorted(history, key=lambda e: e.get("run_date", ""))
+    
+    recent_runs = history[-limit:]
+    if not recent_runs:
+        return np.array([])
+        
+    matrix_rows = []
+    for run in recent_runs:
+        score_map = {s["factor_id"]: float(s["score"]) for s in run.get("signals", []) if s.get("score") is not None}
+        row = [score_map.get(fid, float("nan")) for fid in FACTOR_IDS]
+        matrix_rows.append(row)
+        
+    return np.array(matrix_rows)
 
 
 def _count_history_weeks() -> int:
-    from app.db.models import PipelineRun
-    db = _get_db_session()
-    try:
-        return db.query(PipelineRun).count()
-    finally:
-        db.close()
+    return len(load_history())
 
 
 # ── Quality verdict ────────────────────────────────────────────────────────────
