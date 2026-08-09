@@ -4,6 +4,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import { unstable_noStore as noStore } from 'next/cache';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -69,6 +70,9 @@ export interface HistoryResponse {
 // ── Fetch helpers ─────────────────────────────────────────────────────────────
 
 async function fetchJson(): Promise<LatestScores[]> {
+  if (process.env.NODE_ENV === 'development') {
+    noStore();
+  }
   try {
     const filePath = path.join(process.cwd(), 'public', 'data.json');
     const fileContents = await fs.readFile(filePath, 'utf8');

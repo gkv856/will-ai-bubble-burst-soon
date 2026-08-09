@@ -12,7 +12,7 @@ from ..core.scoring import safe_execute
 from ..core.types import RawFetch
 
 FACTOR_ID = "energy_costs"
-SERIES_ID = "APUS000072610"  # Average retail electricity price, US city average
+SERIES_ID = "APU000072610"  # Average retail electricity price, US city average
 
 
 @safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="FRED fetch failed"))

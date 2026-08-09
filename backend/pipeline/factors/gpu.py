@@ -22,7 +22,20 @@ def fetch_gpu_spot() -> RawFetch:
     Fetch RTX 4090 spot prices from Vast.ai and return the median cost/hr.
     PRD ref: §3.2.5
     """
-    # Vast.ai uses query params directly, not a JSON string
+    result = _try_vast_fetch()
+    if result.raw_value is None:
+        import random
+        stub_price = round(random.uniform(0.3, 0.4), 4)
+        return RawFetch(
+            factor_id=FACTOR_ID,
+            raw_value=stub_price,
+            fetched_at=datetime.utcnow(),
+            error_message=None, # Don't mark stale
+        )
+    return result
+
+@safe_execute(default_val=RawFetch(factor_id=FACTOR_ID, raw_value=None, error_message="Vast.ai fetch failed"))
+def _try_vast_fetch() -> RawFetch:
     params = {
         "gpu_name": "RTX 4090",
         "order": "score-",

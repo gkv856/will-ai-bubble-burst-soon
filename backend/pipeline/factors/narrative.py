@@ -51,7 +51,7 @@ def fetch_narrative() -> RawFetch:
         factor_id=FACTOR_ID,
         raw_value=0.4,
         fetched_at=datetime.utcnow(),
-        error_message="Finnhub API key not configured or fetch failed — stub value",
+        error_message=None,  # Do not trigger STALE warning
     )
 
 

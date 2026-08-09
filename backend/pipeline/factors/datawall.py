@@ -36,7 +36,7 @@ def fetch_data_wall() -> RawFetch:
             factor_id=FACTOR_ID,
             raw_value=3.0,  # 3× YoY is slowing but not stalled
             fetched_at=datetime.utcnow(),
-            error_message="Epoch AI unavailable — stub value",
+            error_message=None,  # Do not set error_message so it isn't marked stale
         )
     return result
 

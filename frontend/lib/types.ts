@@ -13,8 +13,12 @@ export interface WeekData {
   aiPredictions?: Record<string, AiPrediction>;
 }
 
-/** Returns the display label for an entry — dayId if available, else weekId. */
-export function entryLabel(entry: WeekData): string {
+export function entryLabel(entry: WeekData | any): string {
+  if (entry.run_date) {
+    const datePart = entry.run_date.split("T")[0];
+    const d = new Date(datePart + "T00:00:00");
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  }
   if (entry.dayId) {
     // Format "2026-08-07" as "Aug 7"
     const d = new Date(entry.dayId + "T00:00:00");

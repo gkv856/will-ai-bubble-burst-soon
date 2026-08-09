@@ -61,30 +61,27 @@ export function HistoryChart({ historyData }: HistoryChartProps) {
     }
   }
 
-  // Calculate dynamic gradient offsets based on the line's bounding box
-  const scores = chartData.map(d => d.displayScore).filter(s => s !== undefined);
-  const dataMax = Math.max(...scores);
-  const dataMin = Math.min(...scores);
-  const range = dataMax - dataMin || 1;
-  const offset70 = Math.max(0, Math.min(1, (dataMax - 70) / range)) * 100;
-  const offset40 = Math.max(0, Math.min(1, (dataMax - 40) / range)) * 100;
+  const allScores = chartData.flatMap(d => [d.displayScore, d.futureScore]).filter(s => s !== undefined) as number[];
+  const maxY = Math.max(...allScores, 1);
+  const minY = Math.min(...allScores, 0);
+  
+  const range = maxY - minY || 1;
+  // Stroke is 2.5px thick. On a 320px chart with domain [0,100], 1 point = 3.2px.
+  // Half the stroke is ~1.25px, which is ~0.4 points.
+  // We shift the gradient boundaries down by 0.5 points so that a curve peaking exactly at 70 
+  // has its entire stroke thickness colored Red.
+  const offset70 = Math.max(0, Math.min(100, ((maxY - 69.5) / range) * 100));
+  const offset40 = Math.max(0, Math.min(100, ((maxY - 39.5) / range) * 100));
 
   const renderGradientStops = () => {
-    const stops = [];
-    if (dataMax > 70) {
-      stops.push(<stop key="r1" offset="0%" stopColor="#ef4444" />);
-      stops.push(<stop key="r2" offset={`${offset70}%`} stopColor="#ef4444" />);
-    }
-    
-    stops.push(<stop key="y1" offset={`${offset70}%`} stopColor="#f59e0b" />);
-    stops.push(<stop key="y2" offset={`${offset40}%`} stopColor="#f59e0b" />);
-    
-    if (dataMin < 40) {
-      stops.push(<stop key="g1" offset={`${offset40}%`} stopColor="#10b981" />);
-      stops.push(<stop key="g2" offset="100%" stopColor="#10b981" />);
-    }
-    
-    return stops;
+    return [
+      <stop key="r1" offset="0%" stopColor="#ef4444" />,
+      <stop key="r2" offset={`${offset70}%`} stopColor="#ef4444" />,
+      <stop key="y1" offset={`${offset70 + 0.001}%`} stopColor="#f59e0b" />,
+      <stop key="y2" offset={`${offset40}%`} stopColor="#f59e0b" />,
+      <stop key="g1" offset={`${offset40 + 0.001}%`} stopColor="#10b981" />,
+      <stop key="g2" offset="100%" stopColor="#10b981" />,
+    ];
   };
 
   return (

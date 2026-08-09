@@ -10,6 +10,7 @@ from functools import wraps
 from typing import Callable, Optional, ParamSpec, TypeVar
 
 import numpy as np
+from tenacity import retry, stop_after_attempt, wait_exponential
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -74,14 +75,23 @@ def compute_velocity(scores: list[float], weeks: int) -> Optional[float]:
 # ── Safe executor decorator ───────────────────────────────────────────────────
 
 def safe_execute(default_val: T) -> Callable[[Callable[P, T]], Callable[P, T]]:
-    """Decorator — catches all exceptions and returns *default_val* on failure."""
+    """Decorator — catches all exceptions and returns *default_val* on failure, after retrying 3 times."""
     def decorator(func: Callable[P, T]) -> Callable[P, T]:
+        # Inner retry-wrapped function that will raise RetryError if it exhausts attempts
+        @retry(
+            stop=stop_after_attempt(3),
+            wait=wait_exponential(multiplier=1, min=2, max=10),
+            reraise=True
+        )
+        def _retriable_func(*args: P.args, **kwargs: P.kwargs) -> T:
+            return func(*args, **kwargs)
+
         @wraps(func)
         def wrapper(*args: P.args, **kwargs: P.kwargs) -> T:
             try:
-                return func(*args, **kwargs)
+                return _retriable_func(*args, **kwargs)
             except Exception as exc:
-                logger.error(f"Error in {func.__name__}: {exc}")
+                logger.error(f"Error in {func.__name__} after retries: {exc}")
                 return default_val
         return wrapper
     return decorator

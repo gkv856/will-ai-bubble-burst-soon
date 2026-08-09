@@ -9,6 +9,8 @@ requests>=2.31.0
 
 # Testing
 pytest>=8.0.0
+pytest-asyncio
+tenacity>=8.0.0
 
 # Scheduling
 apscheduler>=3.10.4
