@@ -36,7 +36,7 @@ export interface FactorExplain {
 // ─────────────────────────────────────────────────────────────────────────────
 export const FACTORS: FactorExplain[] = [
   {
-    id: "demand",
+    id: "demand_reality",
     title: "Demand Reality",
     weight: 20,
     emoji: "📊",
@@ -58,7 +58,7 @@ export const FACTORS: FactorExplain[] = [
       "Say IGV is at $90 and SMH is at $200. The ratio is 0.45 — healthy, 0 risk. But if IGV stays at $90 and SMH rockets to $260, ratio drops to 0.35 — maximum danger.",
   },
   {
-    id: "valuation",
+    id: "erp_valuation",
     title: "ERP Valuation",
     weight: 20,
     emoji: "💰",
@@ -80,7 +80,7 @@ export const FACTORS: FactorExplain[] = [
       "Right now the S&P 500's trailing P/E is around 27, an earnings yield of roughly 3.7%. The 10-year Treasury yields about 4.75%. That's a −1% ERP — stocks are priced to return less than a boring government bond, which is why this factor is reading near maximum risk.",
   },
   {
-    id: "behavioral",
+    id: "retail_fomo",
     title: "Retail FOMO",
     weight: 15,
     emoji: "🔥",
@@ -101,7 +101,7 @@ export const FACTORS: FactorExplain[] = [
       'If "Nvidia options" scores 60 and "AI investing" scores 70, that\'s a combined 130 — getting into the danger zone. If both are around 25, combined 50, markets are calm.',
   },
   {
-    id: "liquidity",
+    id: "m2_liquidity",
     title: "M2 Liquidity",
     weight: 15,
     emoji: "💧",
@@ -122,7 +122,7 @@ export const FACTORS: FactorExplain[] = [
       "If M2 is $20,800B, we're halfway between healthy and danger — so the score is around 50. If the Fed starts printing again and M2 climbs to $21,500B, risk drops to 0.",
   },
   {
-    id: "gpu",
+    id: "gpu_spot",
     title: "GPU Spot Prices",
     weight: 10,
     emoji: "🖥️",
@@ -145,7 +145,7 @@ export const FACTORS: FactorExplain[] = [
       "Say the average RTX 4090 rents for $0.35/hr. That's halfway between $0.50 and $0.20, so the score is around 50. If prices stay at $0.60/hr, demand is clearly there — 0 risk.",
   },
   {
-    id: "credit",
+    id: "credit_spreads",
     title: "Credit Spreads",
     weight: 10,
     emoji: "📉",
@@ -167,7 +167,7 @@ export const FACTORS: FactorExplain[] = [
       "If the spread is at 4.5% — right in the middle — the risk score is 50. If spreads tighten back to 2.5%, banks are basically giving money away. 0 risk. If spreads widen to 6%, something is breaking. 100 risk.",
   },
   {
-    id: "datawall",
+    id: "data_wall",
     title: "Data Wall",
     weight: 5,
     emoji: "🧱",
@@ -188,7 +188,7 @@ export const FACTORS: FactorExplain[] = [
       "If the biggest disclosed model a year ago used 5×10²⁵ FLOP, and today's biggest is 5×10²⁶ FLOP, that's a full 10x jump — 0 risk. Right now the record hasn't budged in over a year, which is why this factor is reading 100.",
   },
   {
-    id: "energy",
+    id: "energy_costs",
     title: "Energy Costs",
     weight: 5,
     emoji: "⚡",
@@ -209,6 +209,25 @@ export const FACTORS: FactorExplain[] = [
       "Price at $0.15/kWh or below = grid has slack, 0 risk. Price at $0.22/kWh or above = real strain, 100 risk. Linear in between.",
     example:
       "The average US price was about $0.14/kWh in late 2021 and has climbed to roughly $0.20/kWh now — that's already more than halfway to the danger threshold, which is why this factor is elevated.",
+  },
+  {
+    id: "narrative",
+    title: "Narrative Dominance",
+    weight: 16,
+    emoji: "📰",
+    oneLiner: "Is AI dominating the news cycle?",
+    equation: {
+      result: "AI News Share",
+      kind: "fraction",
+      numerator: { value: "AI-related articles", label: "Finnhub news API" },
+      denominator: { value: "Total market articles", label: "" },
+      unit: "%",
+      caption: "share ≥ 20% → 100% risk   ·   share ≤ 5% → 0% risk",
+    },
+    whatWeWatch: "We track the proportion of market news articles mentioning AI via Finnhub.",
+    whyItMatters: "When a single theme dominates financial news, it often signals peak hype and crowded positioning.",
+    howWeScore: "If AI makes up over 20% of all market news, the hype is deafening (100 risk). Below 5% is normal background noise (0 risk).",
+    example: "If 15% of all articles mention AI, the score is roughly 66, indicating elevated hype.",
   },
 ];
 

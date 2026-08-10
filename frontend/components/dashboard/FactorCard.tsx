@@ -2,17 +2,15 @@
 
 import { useEffect, useState } from "react";
 import type { SVGProps } from "react";
-import { Cpu, CreditCard, Zap, ShoppingCart, Server, DollarSign, Flame, Droplets } from "lucide-react";
+import { Cpu, CreditCard, Zap, ShoppingCart, Server, DollarSign, Flame, Droplets, Newspaper } from "lucide-react";
+import type { AiPrediction } from "@/lib/types";
 
 interface FactorCardProps {
   title: string;
   score: number | null;
   id: string;
   desc?: string;
-  aiPrediction?: {
-    scores: number[];
-    reason: string;
-  };
+  aiPrediction?: AiPrediction;
 }
 
 export function getColorClass(score: number): string {
@@ -34,14 +32,15 @@ function getRiskLabel(score: number): string {
 }
 
 const ICONS: Record<string, React.ElementType> = {
-  gpu:       Cpu,
-  credit:    CreditCard,
-  energy:    Zap,
-  demand:    ShoppingCart,
-  datawall:  Server,
-  valuation: DollarSign,
-  behavioral: Flame,
-  liquidity: Droplets,
+  gpu_spot:       Cpu,
+  credit_spreads: CreditCard,
+  energy_costs:   Zap,
+  demand_reality: ShoppingCart,
+  data_wall:      Server,
+  erp_valuation:  DollarSign,
+  retail_fomo:    Flame,
+  m2_liquidity:   Droplets,
+  narrative:      Newspaper,
 };
 
 export function FactorCard({ title, score, id, desc, aiPrediction }: FactorCardProps) {

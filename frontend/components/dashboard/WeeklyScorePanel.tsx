@@ -5,14 +5,15 @@ import { LatestScores } from "@/lib/api";
 
 // Maps factor IDs → human labels + weights
 const FACTOR_META: { id: string; label: string; weight: number }[] = [
-  { id: "demand",     label: "Demand Reality",   weight: 20 },
-  { id: "valuation",  label: "ERP Valuation",    weight: 20 },
-  { id: "behavioral", label: "Retail FOMO",      weight: 15 },
-  { id: "liquidity",  label: "M2 Liquidity",     weight: 15 },
-  { id: "gpu",        label: "GPU Spot Prices",  weight: 10 },
-  { id: "credit",     label: "Credit Spreads",   weight: 10 },
-  { id: "datawall",   label: "Data Wall",        weight:  5 },
-  { id: "energy",     label: "Energy Costs",     weight:  5 },
+  { id: "demand_reality", label: "Demand Reality",   weight: 20 },
+  { id: "erp_valuation",  label: "ERP Valuation",    weight: 20 },
+  { id: "retail_fomo",    label: "Retail FOMO",      weight: 15 },
+  { id: "m2_liquidity",   label: "M2 Liquidity",     weight: 15 },
+  { id: "gpu_spot",       label: "GPU Spot Prices",  weight: 10 },
+  { id: "credit_spreads", label: "Credit Spreads",   weight: 10 },
+  { id: "data_wall",      label: "Data Wall",        weight:  5 },
+  { id: "energy_costs",   label: "Energy Costs",     weight:  5 },
+  { id: "narrative",      label: "Narrative",        weight: 16 },
 ];
 
 function barColor(score: number) {
@@ -62,7 +63,7 @@ export function WeeklyScorePanel({ latestData }: { latestData: LatestScores | nu
         <div>
           <p className="text-[9px] font-mono text-white/25 uppercase tracking-[0.15em] mb-1">This week</p>
           <p className="text-sm font-mono font-semibold text-white/80">
-            {latestData?.run_id ? latestData.run_id.slice(0, 8) : "—"}
+            {latestData?.run_id ? `Run ID: ${latestData.run_id.slice(0, 8)}` : "—"}
             {date && <span className="text-white/30 font-normal ml-2">· {date}</span>}
           </p>
         </div>
@@ -110,7 +111,7 @@ export function WeeklyScorePanel({ latestData }: { latestData: LatestScores | nu
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-mono text-white/50">{label}</span>
-                  <span className="text-[9px] font-mono text-white/20">{weight}% weight</span>
+                  <span className="text-[9px] font-mono text-white/20">{signal?.weight_used != null ? Math.round(signal.weight_used * 100) : weight}% weight</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {raw !== null && (
@@ -160,7 +161,7 @@ export function WeeklyScorePanel({ latestData }: { latestData: LatestScores | nu
       {/* Footer note */}
       <div className="px-6 pb-5">
         <p className="text-[10px] font-mono text-white/20 leading-relaxed">
-          Composite = (Demand × 20%) + (Valuation × 20%) + (FOMO × 15%) + (Liquidity × 15%) + (GPU × 10%) + (Credit × 10%) + (Data Wall × 5%) + (Energy × 5%)
+          Composite = sum(Signal Score × Adaptive Weight). Adaptive weights prioritize accelerating risks.
         </p>
       </div>
     </div>

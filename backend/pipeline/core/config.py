@@ -18,5 +18,6 @@ load_dotenv(BACKEND_DIR / "pipeline" / ".env")
 FRED_API_KEY: str | None = os.getenv("FRED_API_KEY")
 SERPAPI_KEY: str | None = os.getenv("SERPAPI_KEY")
 GEMINI_API_KEY: str | None = os.getenv("GEMINI_API_KEY")
+GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-flash-latest")
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")

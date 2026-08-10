@@ -72,6 +72,14 @@ def _store_pipeline_run(
         ],
         "analogs": analog_result,
     }
+
+    # Fetch AI predictions using the history (including the current entry)
+    from pipeline.clients.gemini import get_ai_predictions
+    history_for_ai = history[-14:] + [entry]  # up to 15 entries
+    ai_preds = get_ai_predictions(history_for_ai)
+    if ai_preds:
+        entry["aiPredictions"] = ai_preds
+
     history = upsert_entry(history, entry)
     save_history(history)
     logger.info(f"Pipeline run {run_id[:8]}… stored to data.json.")

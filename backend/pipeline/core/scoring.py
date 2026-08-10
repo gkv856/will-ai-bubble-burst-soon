@@ -45,9 +45,10 @@ def percentile_rank_score(
 
     arr = np.array(history, dtype=float)
 
-    # Count how many historical values are <= current_value
-    count_le = int(np.sum(arr <= current_value))
-    percentile = count_le / len(arr) * 100  # 0..100
+    # Standard percentile rank with tie-handling (fractional ranking)
+    count_lt = int(np.sum(arr < current_value))
+    count_eq = int(np.sum(arr == current_value))
+    percentile = (count_lt + 0.5 * count_eq) / len(arr) * 100  # 0..100
 
     score = 100 - percentile if invert else percentile
     return int(np.clip(round(score), 0, 100))

@@ -2,7 +2,10 @@
 
 import { LatestScores } from "@/lib/api";
 import { FACTORS, HOW_IT_WORKS } from "@/lib/factors-data";
-import { StepCard, FactorAccordion } from "@/components/dashboard/FactorAccordion";
+import {
+  StepCard,
+  FactorAccordion,
+} from "@/components/dashboard/FactorAccordion";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
@@ -14,10 +17,22 @@ import { WeeklyScorePanel } from "@/components/dashboard/WeeklyScorePanel";
 // ─────────────────────────────────────────────────────────────────────────────
 // Main export
 // ─────────────────────────────────────────────────────────────────────────────
-export function MathBreakdown({ latestData }: { latestData?: LatestScores | null }) {
+export function MathBreakdown({
+  latestData,
+}: {
+  latestData?: LatestScores | null;
+}) {
   return (
     <section className="space-y-8" aria-labelledby="math-heading">
+      <div className="section-divider" />
 
+      {/* This week's score — the punchline */}
+      <div className="space-y-3">
+        <p className="text-[9px] font-mono text-white/25 uppercase tracking-[0.15em]">
+          Putting it all together
+        </p>
+        <WeeklyScorePanel latestData={latestData ?? null} />
+      </div>
       {/* Header */}
       <div className="space-y-2">
         <h2
@@ -27,7 +42,9 @@ export function MathBreakdown({ latestData }: { latestData?: LatestScores | null
           How the score is calculated
         </h2>
         <p className="text-sm text-white/35 leading-relaxed max-w-2xl">
-          No finance degree needed. Here&apos;s how we go from raw data to the number you see at the top of the page — explained like you&apos;re explaining it to a friend.
+          No finance degree needed. Here&apos;s how we go from raw data to the
+          number you see at the top of the page — explained like you&apos;re
+          explaining it to a friend.
         </p>
       </div>
 
@@ -51,17 +68,6 @@ export function MathBreakdown({ latestData }: { latestData?: LatestScores | null
           ))}
         </div>
       </div>
-
-      <div className="section-divider" />
-
-      {/* This week's score — the punchline */}
-      <div className="space-y-3">
-        <p className="text-[9px] font-mono text-white/25 uppercase tracking-[0.15em]">
-          Putting it all together
-        </p>
-        <WeeklyScorePanel latestData={latestData ?? null} />
-      </div>
-
     </section>
   );
 }

@@ -31,9 +31,12 @@ export default async function Home() {
   const history = historyResp.data;
 
   const score = latest?.composite_score ?? null;
-  const signalMap = latest?.signals && Array.isArray(latest.signals)
-    ? Object.fromEntries(latest.signals.map((s: any) => [s.factor_id, s.score ?? 0]))
-    : null;
+  const signalMap =
+    latest?.signals && Array.isArray(latest.signals)
+      ? Object.fromEntries(
+          latest.signals.map((s: any) => [s.factor_id, s.score ?? 0]),
+        )
+      : null;
 
   // Build sparkline data from history (last 12 entries per factor)
   const sparklineData: Record<string, number[]> = {};
@@ -82,9 +85,7 @@ export default async function Home() {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-xs font-mono">
             <StatusIcon score={score} />
-            <span className="text-white/40">
-              {runDate || "—"}
-            </span>
+            <span className="text-white/40">{runDate || "—"}</span>
           </div>
 
           <RefreshButton />
@@ -165,7 +166,9 @@ export default async function Home() {
 
         {!latest && (
           <div className="mt-4 flex flex-col items-center gap-2">
-            <p className="text-red-400 text-sm font-mono">Could not load data. Run the pipeline first.</p>
+            <p className="text-red-400 text-sm font-mono">
+              Could not load data. Run the pipeline first.
+            </p>
           </div>
         )}
       </section>
@@ -193,15 +196,8 @@ export default async function Home() {
           )}
         </div>
 
-        {/* 9 Signal grid */}
-        {latest && (
-          <SignalGrid signals={latest.signals} sparklineData={sparklineData} />
-        )}
-
         {/* History chart */}
-        {history.length > 0 && (
-          <HistoryChart historyData={history as any} />
-        )}
+        {history.length > 0 && <HistoryChart historyData={history as any} />}
 
         {/* Analog panel */}
         {latest?.analogs && (

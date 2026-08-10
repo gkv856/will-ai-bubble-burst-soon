@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { FactorCard } from "@/components/dashboard/FactorCard";
@@ -21,16 +22,22 @@ const MathBreakdown = dynamic(
 
 import { MethodologyCard } from "@/components/dashboard/MethodologyCard";
 import { StatusIcon } from "@/components/dashboard/StatusIcon";
-
-export const revalidate = 3600;
+import {
+  FACTOR_CARDS_DATA,
+  METHODOLOGY_CARDS_DATA,
+  revalidate,
+} from "@/components/dashboard/CompData";
 
 // ── Details page (Server Component) ──────────────────────────────────────────
 export default async function DetailsPage() {
   const latest = await fetchLatestScores();
   const compositeScore = latest?.composite_score ?? null;
-  const signalMap = latest?.signals && Array.isArray(latest.signals)
-    ? Object.fromEntries(latest.signals.map((s) => [s.factor_id, s.score ?? null]))
-    : {};
+  const signalMap =
+    latest?.signals && Array.isArray(latest.signals)
+      ? Object.fromEntries(
+          latest.signals.map((s) => [s.factor_id, s.score ?? null]),
+        )
+      : {};
 
   const runDate = latest?.run_date
     ? new Date(latest.run_date).toLocaleDateString("en-US", {
@@ -69,9 +76,7 @@ export default async function DetailsPage() {
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 text-xs font-mono">
             <StatusIcon score={compositeScore} />
-            <span className="text-white/40">
-              {runDate || "—"}
-            </span>
+            <span className="text-white/40">{runDate || "—"}</span>
           </div>
           <a
             href="https://github.com/gkv856/will-ai-bubble-burst-soon"
@@ -97,8 +102,7 @@ export default async function DetailsPage() {
         </h1>
         <p className="text-white/40 text-sm font-mono max-w-xl">
           Individual factor scores, scoring methodology, and the composite
-          calculation — as of{" "}
-          {runDate || "latest data"}.
+          calculation — as of {runDate || "latest data"}.
         </p>
       </section>
 
@@ -124,63 +128,22 @@ export default async function DetailsPage() {
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              <FactorCard
-                title="GPU Spot Prices"
-                score={signalMap.gpu ?? null}
-                id="gpu"
-                desc="RTX 4090 rental cost vs historical baseline."
-              />
-              <FactorCard
-                title="Credit Spreads"
-                score={signalMap.credit ?? null}
-                id="credit"
-                desc="Investment-grade bond spread (BAMLC0A0CM) from FRED."
-              />
-              <FactorCard
-                title="Energy Costs"
-                score={signalMap.energy ?? null}
-                id="energy"
-                desc="WTI crude oil price — energy cost pressure on AI data centres."
-              />
-              <FactorCard
-                title="Demand Reality"
-                score={signalMap.demand ?? null}
-                id="demand"
-                desc="IGV/SMH ratio — software demand vs. hardware speculation."
-              />
-              <FactorCard
-                title="Data Wall"
-                score={signalMap.datawall ?? null}
-                id="datawall"
-                desc="Risk from AI training data exhaustion."
-              />
-              <FactorCard
-                title="ERP Valuation"
-                score={signalMap.valuation ?? null}
-                id="valuation"
-                desc="S&P 500 earnings yield vs. 10-year Treasury yield."
-              />
-              <FactorCard
-                title="Retail FOMO"
-                score={signalMap.behavioral ?? null}
-                id="behavioral"
-                desc='Google Trends for "Nvidia options" + "AI investing".'
-              />
-              <FactorCard
-                title="Liquidity"
-                score={signalMap.liquidity ?? null}
-                id="liquidity"
-                desc="Overnight reverse repo volume — tracks loose liquidity."
-              />
-              <FactorCard
-                title="Narrative"
-                score={signalMap.narrative ?? null}
-                id="narrative"
-                desc="Epoch AI narrative tracking."
-              />
+              {FACTOR_CARDS_DATA.map((card) => (
+                <FactorCard
+                  key={card.id}
+                  title={card.title}
+                  score={signalMap[card.id] ?? null}
+                  id={card.id}
+                  desc={card.desc}
+                  aiPrediction={latest?.aiPredictions?.[card.id]}
+                />
+              ))}
             </div>
           </section>
+          <div className="section-divider" />
 
+          {/* ── Math deep-dive ── */}
+          <MathBreakdown latestData={latest as any} />
           <div className="section-divider" />
 
           {/* ── Methodology ── */}
@@ -195,61 +158,17 @@ export default async function DetailsPage() {
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              <MethodologyCard
-                id="F1"
-                title="GPU Spot Prices"
-                weight="10%"
-                desc="High GPU rental cost signals over-investment and speculative demand in AI compute."
-              />
-              <MethodologyCard
-                id="F2"
-                title="Credit Spreads"
-                weight="10%"
-                desc="Widening spreads signal macro stress; tightening enables continued AI spending."
-              />
-              <MethodologyCard
-                id="F3"
-                title="Demand Reality"
-                weight="20%"
-                desc="The IGV/SMH ratio reveals if software demand is keeping up with hardware bets."
-              />
-              <MethodologyCard
-                id="F4"
-                title="ERP Valuation"
-                weight="20%"
-                desc="A compressed equity risk premium signals markets pricing in an implausible future."
-              />
-              <MethodologyCard
-                id="F5"
-                title="Retail FOMO"
-                weight="15%"
-                desc="Retail search intensity tracks speculative euphoria at the top of bubble cycles."
-              />
-              <MethodologyCard
-                id="F6"
-                title="Liquidity"
-                weight="15%"
-                desc="Low overnight reverse repo volume = loose cash flooding into risk assets."
-              />
-              <MethodologyCard
-                id="F7"
-                title="Data Wall"
-                weight="5%"
-                desc="Training data scarcity could stall model progress, puncturing growth narratives."
-              />
-              <MethodologyCard
-                id="F8"
-                title="Energy Costs"
-                weight="5%"
-                desc="Rising oil prices signal escalating energy costs for AI data-centre infrastructure."
-              />
+              {METHODOLOGY_CARDS_DATA.map((card) => (
+                <MethodologyCard
+                  key={card.id}
+                  id={card.id}
+                  title={card.title}
+                  weight={card.weight}
+                  desc={card.desc}
+                />
+              ))}
             </div>
           </section>
-
-          <div className="section-divider" />
-
-          {/* ── Math deep-dive ── */}
-          <MathBreakdown latestData={latest as any} />
 
           <div className="section-divider" />
 

@@ -1,4 +1,5 @@
 """Google Gemini AI analysis client — trend summary from factor history."""
+
 from __future__ import annotations
 
 import json
@@ -6,37 +7,17 @@ import logging
 
 import requests
 
-from ..core.config import GEMINI_API_KEY
+from ..core.config import GEMINI_API_KEY, GEMINI_MODEL
+from .system_prompt import _SYSTEM_PROMPT
 
 _GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-3-pro-preview:generateContent"
+    f"https://generativelanguage.googleapis.com/v1beta/models/"
+    f"{GEMINI_MODEL}:generateContent"
 )
 
-_SYSTEM_PROMPT = (
-    "You are an analyst reading a daily time-series of 8 macroeconomic risk "
-    "factors tracking the AI investment bubble. Each factor is scored 0-100 "
-    "(0 = no risk, 100 = maximum risk). The factors are: demand, valuation, "
-    "behavioral, liquidity, gpu, credit, energy, and datawall.\n\n"
-    "Given the previous days of data, predict the scores for the NEXT 3 DAYS "
-    "(Day 1, Day 2, Day 3) for all 8 factors individually, as well as a 'composite' "
-    "score for each of the 3 days. Also provide a 1-3 sentence reason for each prediction.\n"
-    "You must return ONLY a JSON object with this exact structure (each 'scores' array must have exactly 3 integers):\n"
-    "{\n"
-    '  "composite": {"scores": [80, 81, 83], "reason": "..."},\n'
-    '  "demand": {"scores": [85, 85, 86], "reason": "..."},\n'
-    '  "valuation": {"scores": [60, 61, 61], "reason": "..."},\n'
-    '  "behavioral": {"scores": [90, 93, 95], "reason": "..."},\n'
-    '  "liquidity": {"scores": [30, 30, 31], "reason": "..."},\n'
-    '  "gpu": {"scores": [75, 75, 75], "reason": "..."},\n'
-    '  "credit": {"scores": [40, 42, 44], "reason": "..."},\n'
-    '  "energy": {"scores": [50, 50, 49], "reason": "..."},\n'
-    '  "datawall": {"scores": [95, 96, 96], "reason": "..."}\n'
-    "}"
-)
 
 def get_ai_predictions(history_window: list[dict]) -> dict | None:
-    """Sends recent factor history to Gemini 1.5 Pro and returns structured predictions.
+    """Sends recent factor history to Gemini and returns structured predictions.
 
     Returns a parsed JSON dict, or None on failure.
     """
@@ -47,17 +28,11 @@ def get_ai_predictions(history_window: list[dict]) -> dict | None:
     data_text = json.dumps(history_window, indent=2)
 
     payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": f"{_SYSTEM_PROMPT}\n\nDATA:\n{data_text}"}
-                ]
-            }
-        ],
+        "contents": [{"parts": [{"text": f"{_SYSTEM_PROMPT}\n\nDATA:\n{data_text}"}]}],
         "generationConfig": {
             "temperature": 0.3,
-            "maxOutputTokens": 1024,
-            "response_mime_type": "application/json"
+            "maxOutputTokens": 4096,
+            "responseMimeType": "application/json",
         },
     }
 
@@ -68,7 +43,9 @@ def get_ai_predictions(history_window: list[dict]) -> dict | None:
             timeout=45,
         )
         if response.status_code != 200:
-            logging.error(f"[Gemini] API returned {response.status_code}: {response.text[:200]}")
+            logging.error(
+                f"[Gemini] API returned {response.status_code}: {response.text[:200]}"
+            )
             return None
 
         candidates = response.json().get("candidates", [])
@@ -76,10 +53,18 @@ def get_ai_predictions(history_window: list[dict]) -> dict | None:
             logging.warning("[Gemini] No candidates in response.")
             return None
 
-        text = candidates[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+        candidate = candidates[0]
+        finish_reason = candidate.get("finishReason")
+        if finish_reason not in (None, "STOP"):
+            logging.warning(f"[Gemini] Unexpected finishReason: {finish_reason}")
+
+        # Responses can be split across multiple parts (e.g. interleaved with
+        # thoughtSignature blocks) — concatenate all of them, not just parts[0].
+        parts = candidate.get("content", {}).get("parts", [])
+        text = "".join(part.get("text", "") for part in parts)
         if not text.strip():
             return None
-            
+
         return json.loads(text)
 
     except Exception as exc:

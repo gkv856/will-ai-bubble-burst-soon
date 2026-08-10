@@ -5,6 +5,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { unstable_noStore as noStore } from 'next/cache';
+import type { AiPrediction } from './types';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -52,6 +53,7 @@ export interface LatestScores {
     adjusted_risk: string;
     adjustment_reason: string;
   };
+  aiPredictions?: Record<string, AiPrediction>;
 }
 
 export interface HistoryEntry {
@@ -61,6 +63,7 @@ export interface HistoryEntry {
   composite_upper: number | null;
   quality_verdict: "GREEN" | "YELLOW" | "RED" | null;
   signals: Record<string, number | null>;
+  aiPredictions?: Record<string, AiPrediction>;
 }
 
 export interface HistoryResponse {
@@ -103,7 +106,8 @@ export async function fetchHistory(weeks = 52): Promise<HistoryResponse> {
        composite_lower: entry.confidence_interval?.lower ?? null,
        composite_upper: entry.confidence_interval?.upper ?? null,
        quality_verdict: entry.quality_verdict,
-       signals: signalsMap
+       signals: signalsMap,
+       aiPredictions: entry.aiPredictions
      };
   });
   return { data: formatted };
