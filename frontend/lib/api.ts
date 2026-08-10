@@ -31,6 +31,7 @@ export interface ConfidenceInterval {
 
 export interface AnalogMatch {
   episode_name: string;
+  week_matched: string;
   similarity: number;
   weeks_to_peak: number | null;
   max_drawdown_pct: number | null;
@@ -48,8 +49,8 @@ export interface LatestScores {
   weights_used: Record<string, number>;
   signals: SignalDetail[];
   analogs: {
-    bubble: AnalogMatch[];
-    boom: AnalogMatch[];
+    bubble_analogs: AnalogMatch[];
+    boom_analogs: AnalogMatch[];
     adjusted_risk: string;
     adjustment_reason: string;
   };

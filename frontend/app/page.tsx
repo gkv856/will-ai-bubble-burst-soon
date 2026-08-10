@@ -15,9 +15,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import { getStatusColor, getStatusLabel } from "@/lib/status-utils";
+import { getRiskColor, getRiskLabel } from "@/lib/status-utils";
 import { StatusIcon } from "@/components/dashboard/StatusIcon";
 import { TickerBar } from "@/components/dashboard/TickerBar";
+import { EmailSignup } from "@/components/dashboard/EmailSignup";
 
 export const revalidate = 3600;
 
@@ -141,7 +142,7 @@ export default async function Home() {
             <div>
               <div
                 className="text-5xl font-black font-mono"
-                style={{ color: getStatusColor(score) }}
+                style={{ color: getRiskColor(score) }}
               >
                 {score}
               </div>
@@ -153,9 +154,9 @@ export default async function Home() {
             <div className="text-left">
               <div
                 className="text-sm font-semibold font-mono"
-                style={{ color: getStatusColor(score) }}
+                style={{ color: getRiskColor(score) }}
               >
-                {getStatusLabel(score)}
+                {getRiskLabel(score)}
               </div>
               <div className="text-xs text-white/30 font-mono mt-0.5">
                 as of {runDate}
@@ -202,12 +203,14 @@ export default async function Home() {
         {/* Analog panel */}
         {latest?.analogs && (
           <AnalogPanel
-            bubbleAnalogs={latest.analogs.bubble_matches || []}
-            boomAnalogs={latest.analogs.boom_matches || []}
+            bubbleAnalogs={latest.analogs.bubble_analogs || []}
+            boomAnalogs={latest.analogs.boom_analogs || []}
             adjustedRisk={latest.analogs.adjusted_risk}
-            adjustmentReason={latest.analogs.adjustment_reason}
           />
         )}
+
+        {/* ── Email signup ── */}
+        <EmailSignup />
 
         {/* CTA to details page */}
         <div className="flex justify-center pt-4">

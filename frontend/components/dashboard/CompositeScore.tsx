@@ -3,17 +3,20 @@
 import { useEffect, useState } from "react";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
 import { Activity } from "lucide-react";
+import { getRiskColor, getRiskLabel } from "@/lib/status-utils";
 
 function getColor(score: number) {
-  if (score < 40) return "#10b981";
-  if (score < 70) return "#f59e0b";
-  return "#ef4444";
+  return getRiskColor(score);
 }
 
 function getStatus(score: number) {
-  if (score < 40) return { label: "Healthy", glow: "rgba(16,185,129,0.35)" };
-  if (score < 70) return { label: "Elevated Risk", glow: "rgba(245,158,11,0.35)" };
-  return { label: "Bubble Territory", glow: "rgba(239,68,68,0.35)" };
+  const glowByLabel: Record<string, string> = {
+    "Healthy": "rgba(16,185,129,0.35)",
+    "Elevated Risk": "rgba(245,158,11,0.35)",
+    "Bubble Territory": "rgba(239,68,68,0.35)",
+  };
+  const label = getRiskLabel(score);
+  return { label, glow: glowByLabel[label] };
 }
 
 export function CompositeScore({ score }: { score: number | null }) {
