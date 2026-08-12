@@ -39,3 +39,9 @@ jobs:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
         run: python main.py run-pipeline
 
+      - name: Commit and push updated data
+        run: |
+          git add frontend/public/data.json
+          git diff --staged --quiet || git commit -m "data: automated daily update"
+          git push
+
