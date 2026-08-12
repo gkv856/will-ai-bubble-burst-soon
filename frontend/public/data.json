@@ -3072,5 +3072,274 @@
         "reason": "Collapse from 50 to 3 leaves narrative risk near multi-week lows with a gradual bottoming process."
       }
     }
+  },
+  {
+    "run_id": "a0181f3f-abfb-4bd8-81bc-dfaa3527458f",
+    "run_date": "2026-08-12T05:08:01.375591",
+    "dayId": "2026-08-12",
+    "composite_score": 35.3,
+    "composite_lower": 28.4,
+    "composite_upper": 42.2,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 28.4,
+      "upper": 42.2,
+      "std_dev": 3.54,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 3,
+        "raw_value": 0.1814,
+        "velocity_4wk": -94.23,
+        "velocity_12wk": -94.23,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 97,
+        "raw_value": -0.8676,
+        "velocity_4wk": 125.58,
+        "velocity_12wk": 70.18,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 9,
+        "raw_value": 12.78,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 50,
+        "raw_value": 5.7526,
+        "velocity_4wk": -1.96,
+        "velocity_12wk": 25.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 50,
+        "raw_value": 0.3474,
+        "velocity_4wk": -32.43,
+        "velocity_12wk": 11.11,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 3,
+        "raw_value": 2.7,
+        "velocity_4wk": -92.68,
+        "velocity_12wk": -94.74,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 50,
+        "raw_value": 0.198,
+        "velocity_4wk": 8.7,
+        "velocity_12wk": -26.47,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": -15.25,
+        "velocity_12wk": -5.66,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 6,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2005-01-03",
+          "similarity": 0.812,
+          "weeks_to_peak": 129,
+          "max_drawdown_pct": -52
+        },
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2006-06-05",
+          "similarity": 0.79,
+          "weeks_to_peak": 55,
+          "max_drawdown_pct": -52
+        },
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2007-03-05",
+          "similarity": 0.773,
+          "weeks_to_peak": 16,
+          "max_drawdown_pct": -52
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.774,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.765,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "saas_2017_2019",
+          "episode_name": "SaaS Expansion",
+          "week_matched": "2019-06-03",
+          "similarity": 0.762,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.81) and boom (0.77) both plausible."
+    },
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          34,
+          33,
+          32
+        ],
+        "reason": "The composite score fell from 43.0 to 35.3 due to sharp drops in key underlying signals, maintaining a downward trajectory."
+      },
+      "demand_reality": {
+        "scores": [
+          3,
+          2,
+          2
+        ],
+        "reason": "A precipitous decline to 3 accompanied by a -94.23 4-week velocity indicates persistent downward pressure."
+      },
+      "erp_valuation": {
+        "scores": [
+          97,
+          98,
+          98
+        ],
+        "reason": "A surge to 97 driven by an intense +125.58 4-week velocity keeps risk elevated near peak levels."
+      },
+      "retail_fomo": {
+        "scores": [
+          9,
+          10,
+          10
+        ],
+        "reason": "Retail sentiment has flattened at depressed levels, suggesting minimal near-term movement."
+      },
+      "m2_liquidity": {
+        "scores": [
+          50,
+          49,
+          49
+        ],
+        "reason": "Stability at 50 paired with a slightly negative 4-week velocity (-1.96) points to a minor downward tilt."
+      },
+      "gpu_spot": {
+        "scores": [
+          46,
+          43,
+          40
+        ],
+        "reason": "Retreat from 75 to 50 alongside a -32.43 4-week velocity signals decelerating spot price risk."
+      },
+      "credit_spreads": {
+        "scores": [
+          3,
+          2,
+          2
+        ],
+        "reason": "A sharp drop to 3 combined with a -92.68 4-week velocity keeps risk forecasts near zero."
+      },
+      "energy_costs": {
+        "scores": [
+          51,
+          52,
+          53
+        ],
+        "reason": "A baseline score of 50 supported by a positive 4-week velocity (+8.7) indicates a mild upward trajectory."
+      },
+      "data_wall": {
+        "scores": [
+          48,
+          46,
+          45
+        ],
+        "reason": "Current level of 50 alongside a negative 4-week velocity of -15.25 drives a steady decline."
+      },
+      "narrative": {
+        "scores": [
+          7,
+          8,
+          9
+        ],
+        "reason": "A minor uptick from 3 to 6 indicates a slow recovery out of low levels."
+      }
+    }
   }
 ]
