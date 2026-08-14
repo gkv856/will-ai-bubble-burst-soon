@@ -3610,5 +3610,274 @@
         "reason": "Holding at 8 after bouncing from 3, narrative dominance shows signs of a gradual, low-level recovery."
       }
     }
+  },
+  {
+    "run_id": "b1cef3a6-e453-4f88-be64-4bc443778fc3",
+    "run_date": "2026-08-14T05:15:00.753865",
+    "dayId": "2026-08-14",
+    "composite_score": 49.2,
+    "composite_lower": 42.4,
+    "composite_upper": 56.0,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 42.4,
+      "upper": 56.0,
+      "std_dev": 3.46,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 8,
+        "raw_value": 0.1804,
+        "velocity_4wk": -84.0,
+        "velocity_12wk": -82.61,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 92,
+        "raw_value": -0.8639,
+        "velocity_4wk": 84.0,
+        "velocity_12wk": 87.76,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 92,
+        "raw_value": 14.81,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 50,
+        "raw_value": 5.7526,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -12.28,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 70,
+        "raw_value": 0.324,
+        "velocity_4wk": 180.0,
+        "velocity_12wk": 4.48,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 50,
+        "raw_value": 2.71,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 16.28,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 20,
+        "raw_value": 0.197,
+        "velocity_4wk": -60.0,
+        "velocity_12wk": -67.21,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 21.95,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 11,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-01-04",
+          "similarity": 0.856,
+          "weeks_to_peak": 44,
+          "max_drawdown_pct": -77
+        },
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-04-05",
+          "similarity": 0.855,
+          "weeks_to_peak": 31,
+          "max_drawdown_pct": -77
+        },
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-10-04",
+          "similarity": 0.852,
+          "weeks_to_peak": 5,
+          "max_drawdown_pct": -77
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.824,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.817,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.81,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.86) and boom (0.82) both plausible."
+    },
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          49,
+          48,
+          48
+        ],
+        "reason": "The composite score pulled back from 54.9 to 49.2 following the normalization of credit spreads, pointing toward stabilization in the upper 40s."
+      },
+      "demand_reality": {
+        "scores": [
+          8,
+          7,
+          7
+        ],
+        "reason": "Severe negative 4-week (-84.00) and 12-week (-82.61) velocities continue to anchor demand reality risk near single-digit lows."
+      },
+      "erp_valuation": {
+        "scores": [
+          92,
+          91,
+          91
+        ],
+        "reason": "Strong positive 4-week (+84.00) and 12-week (+87.76) velocities keep valuation risk elevated near cycle highs around 92."
+      },
+      "retail_fomo": {
+        "scores": [
+          88,
+          84,
+          80
+        ],
+        "reason": "After surging to 97 and easing to 92, retail sentiment shows early signs of mean-reverting downward from extreme levels."
+      },
+      "m2_liquidity": {
+        "scores": [
+          50,
+          50,
+          49
+        ],
+        "reason": "Persistent neutral readings at 50 coupled with flat 4-week velocity (0.00) and negative 12-week velocity (-12.28) indicate a stable to slight downward drift."
+      },
+      "gpu_spot": {
+        "scores": [
+          73,
+          75,
+          76
+        ],
+        "reason": "A sharp rebound to 70 and an extreme 4-week velocity of +180.00 drive renewed upward momentum in GPU spot risk."
+      },
+      "credit_spreads": {
+        "scores": [
+          50,
+          51,
+          51
+        ],
+        "reason": "A sharp normalization from 97 back to 50 combined with a flat 4-week velocity (0.00) supports consolidation around the neutral baseline."
+      },
+      "energy_costs": {
+        "scores": [
+          21,
+          23,
+          24
+        ],
+        "reason": "A modest bounce from 12 to 20 reflects early stabilization, though heavily negative 4-week velocity (-60.00) limits rapid recovery."
+      },
+      "data_wall": {
+        "scores": [
+          50,
+          51,
+          51
+        ],
+        "reason": "A sustained score of 50 alongside flat 4-week velocity (0.00) and positive 12-week velocity (+21.95) points to steady neutral performance with slight upward bias."
+      },
+      "narrative": {
+        "scores": [
+          13,
+          15,
+          17
+        ],
+        "reason": "Consistent sequential gains from 3 to 11 reflect an ongoing recovery phase in narrative dominance from depressed levels."
+      }
+    }
   }
 ]
