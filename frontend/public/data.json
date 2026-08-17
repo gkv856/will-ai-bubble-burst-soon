@@ -3879,5 +3879,274 @@
         "reason": "Consistent sequential gains from 3 to 11 reflect an ongoing recovery phase in narrative dominance from depressed levels."
       }
     }
+  },
+  {
+    "run_id": "b06b6e52-8d80-4d9e-b010-a75e02da94e4",
+    "run_date": "2026-08-17T04:11:26.459360",
+    "dayId": "2026-08-17",
+    "composite_score": 42.8,
+    "composite_lower": 35.7,
+    "composite_upper": 49.9,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 35.7,
+      "upper": 49.9,
+      "std_dev": 3.6,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 12,
+        "raw_value": 0.1771,
+        "velocity_4wk": -76.0,
+        "velocity_12wk": -72.09,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 2,
+        "raw_value": -0.8063,
+        "velocity_4wk": -96.0,
+        "velocity_12wk": -96.55,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 92,
+        "raw_value": 17.55,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 50,
+        "raw_value": 5.7526,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 0.0,
+        "stale": false,
+        "error_message": "LOCF Fallback (original error: fetch failed)",
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 92,
+        "raw_value": 0.3161,
+        "velocity_4wk": 22.67,
+        "velocity_12wk": 76.92,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 50,
+        "raw_value": 2.71,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 8.7,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 25,
+        "raw_value": 0.197,
+        "velocity_4wk": -50.0,
+        "velocity_12wk": -52.83,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -12.28,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 12,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-06-05",
+          "similarity": 0.801,
+          "weeks_to_peak": 27,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-10-02",
+          "similarity": 0.793,
+          "weeks_to_peak": 10,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-12-04",
+          "similarity": 0.792,
+          "weeks_to_peak": 1,
+          "max_drawdown_pct": -84
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.769,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.768,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.75,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.80) and boom (0.77) both plausible."
+    },
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          43,
+          43,
+          44
+        ],
+        "reason": "Composite score has settled at 42.8 following ERP valuation normalization, with diverging factor pressures balancing around the low 40s."
+      },
+      "demand_reality": {
+        "scores": [
+          13,
+          14,
+          15
+        ],
+        "reason": "A modest sequential rise to 12 points to a gradual recovery, though heavy negative 4-week velocity (-76.00) dampens rapid expansion."
+      },
+      "erp_valuation": {
+        "scores": [
+          2,
+          3,
+          3
+        ],
+        "reason": "A steep drop to 2 accompanied by severe negative 4-week (-96.00) and 12-week (-96.55) velocities keeps valuation risk pinned near cycle lows."
+      },
+      "retail_fomo": {
+        "scores": [
+          89,
+          85,
+          82
+        ],
+        "reason": "Holding at 92 after peaking at 97 indicates an ongoing mean-reversion phase away from extreme speculative territory."
+      },
+      "m2_liquidity": {
+        "scores": [
+          50,
+          50,
+          50
+        ],
+        "reason": "Unchanged readings at 50 with flat 4-week and 12-week velocities (0.00) support continued neutral baseline stability."
+      },
+      "gpu_spot": {
+        "scores": [
+          93,
+          94,
+          95
+        ],
+        "reason": "A surge to 92 reinforced by positive 4-week (+22.67) and 12-week (+76.92) velocities sustains high upward pressure on GPU spot pricing risk."
+      },
+      "credit_spreads": {
+        "scores": [
+          50,
+          51,
+          51
+        ],
+        "reason": "Consolidation at 50 with zero 4-week velocity and modest 12-week velocity (+8.70) indicates continued stability near baseline."
+      },
+      "energy_costs": {
+        "scores": [
+          28,
+          30,
+          32
+        ],
+        "reason": "Sequential gains from 12 to 25 reflect a steady rebound trajectory, tempered by negative 4-week velocity (-50.00)."
+      },
+      "data_wall": {
+        "scores": [
+          50,
+          49,
+          49
+        ],
+        "reason": "Holding at 50 with flat 4-week velocity (0.00) and negative 12-week velocity (-12.28) indicates neutral performance with slight softening."
+      },
+      "narrative": {
+        "scores": [
+          14,
+          15,
+          17
+        ],
+        "reason": "A sustained upward progression from 3 to 12 points to a continuing gradual recovery phase in narrative dominance."
+      }
+    }
   }
 ]
