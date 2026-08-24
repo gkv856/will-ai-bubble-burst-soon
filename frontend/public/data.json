@@ -5142,5 +5142,192 @@
         "reason": "A consistent multi-session climb from 3 to 19 indicates uninterrupted recovery and accelerating narrative dominance."
       }
     }
+  },
+  {
+    "run_id": "11d3e81e-3ec2-4ba3-8530-ee0a04b8fb47",
+    "run_date": "2026-08-24T04:13:33.546842",
+    "dayId": "2026-08-24",
+    "composite_score": 53.3,
+    "composite_lower": 45.7,
+    "composite_upper": 60.9,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 45.7,
+      "upper": 60.9,
+      "std_dev": 3.85,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.09999999999999999,
+      "erp_valuation": 0.09999999999999999,
+      "retail_fomo": 0.09999999999999999,
+      "m2_liquidity": 0.09999999999999999,
+      "gpu_spot": 0.09999999999999999,
+      "credit_spreads": 0.2,
+      "energy_costs": 0.09999999999999999,
+      "data_wall": 0.09999999999999999,
+      "narrative": 0.09999999999999999
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 2,
+        "raw_value": 0.1845,
+        "velocity_4wk": -85.71,
+        "velocity_12wk": -96.15,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 10,
+        "raw_value": -0.8133,
+        "velocity_4wk": 42.86,
+        "velocity_12wk": -76.74,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 78,
+        "raw_value": 17.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 50,
+        "raw_value": 5.7526,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -1.96,
+        "stale": false,
+        "error_message": "LOCF Fallback (original error: fetch failed)",
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 95,
+        "raw_value": 0.3019,
+        "velocity_4wk": 1257.14,
+        "velocity_12wk": 28.38,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 96,
+        "raw_value": 2.75,
+        "velocity_4wk": 4700.0,
+        "velocity_12wk": 134.15,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.2
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 36,
+        "raw_value": 0.197,
+        "velocity_4wk": 24.14,
+        "velocity_12wk": -21.74,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -15.25,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 20,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-06-05",
+          "similarity": 0.774,
+          "weeks_to_peak": 27,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-10-02",
+          "similarity": 0.758,
+          "weeks_to_peak": 10,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-12-04",
+          "similarity": 0.747,
+          "weeks_to_peak": 1,
+          "max_drawdown_pct": -84
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.752,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.748,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.739,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.77) and boom (0.75) both plausible."
+    }
   }
 ]
