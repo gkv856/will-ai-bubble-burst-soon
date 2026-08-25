@@ -5329,5 +5329,274 @@
       "adjusted_risk": "UNCERTAIN",
       "adjustment_reason": "Bubble (0.77) and boom (0.75) both plausible."
     }
+  },
+  {
+    "run_id": "6635ed38-841b-4968-8ede-0b83f33c5d8e",
+    "run_date": "2026-08-25T04:08:24.225570",
+    "dayId": "2026-08-25",
+    "composite_score": 39.9,
+    "composite_lower": 32.8,
+    "composite_upper": 47.0,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 32.8,
+      "upper": 47.0,
+      "std_dev": 3.6,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 2,
+        "raw_value": 0.1874,
+        "velocity_4wk": -97.96,
+        "velocity_12wk": -96.23,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 83,
+        "raw_value": -0.8518,
+        "velocity_4wk": -1.19,
+        "velocity_12wk": 80.43,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 17,
+        "raw_value": 13.95,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 50,
+        "raw_value": 5.7526,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 6.38,
+        "stale": false,
+        "error_message": "LOCF Fallback (original error: fetch failed)",
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 88,
+        "raw_value": 0.3154,
+        "velocity_4wk": 100.0,
+        "velocity_12wk": 76.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 10,
+        "raw_value": 2.7,
+        "velocity_4wk": 11.11,
+        "velocity_12wk": -83.05,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 38,
+        "raw_value": 0.197,
+        "velocity_4wk": 22.58,
+        "velocity_12wk": -39.68,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -7.41,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 21,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-01-04",
+          "similarity": 0.829,
+          "weeks_to_peak": 44,
+          "max_drawdown_pct": -77
+        },
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-04-05",
+          "similarity": 0.818,
+          "weeks_to_peak": 31,
+          "max_drawdown_pct": -77
+        },
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2005-01-03",
+          "similarity": 0.817,
+          "weeks_to_peak": 129,
+          "max_drawdown_pct": -52
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.829,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.816,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.809,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.83) and boom (0.83) both plausible."
+    },
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          41,
+          42,
+          43
+        ],
+        "reason": "The composite score pulled back to 39.9 following sharp reductions in credit spreads and retail FOMO, with steady upward drift in energy costs and narrative dominance supporting a modest recovery into the low 40s."
+      },
+      "demand_reality": {
+        "scores": [
+          2,
+          3,
+          3
+        ],
+        "reason": "Heavy negative 4-week (-97.96) and 12-week (-96.23) velocities keep demand reality risk pinned near the single-digit floor."
+      },
+      "erp_valuation": {
+        "scores": [
+          82,
+          81,
+          80
+        ],
+        "reason": "A high score of 83 combined with flat 4-week velocity (-1.19) points to minor consolidation slightly below recent cycle peaks."
+      },
+      "retail_fomo": {
+        "scores": [
+          19,
+          22,
+          25
+        ],
+        "reason": "A sharp drop from 78 to 17 leaves retail sentiment near recent lows, setting up a gradual mean-reverting recovery."
+      },
+      "m2_liquidity": {
+        "scores": [
+          50,
+          50,
+          50
+        ],
+        "reason": "Flat 4-week velocity (0.00) and consistent baseline readings of 50 indicate continuing stability."
+      },
+      "gpu_spot": {
+        "scores": [
+          89,
+          90,
+          91
+        ],
+        "reason": "Strong positive 4-week (+100.00) and 12-week (+76.00) velocities maintain elevated upward momentum in GPU spot price risk."
+      },
+      "credit_spreads": {
+        "scores": [
+          11,
+          13,
+          15
+        ],
+        "reason": "A steep plunge from 96 to 10 alongside mild positive 4-week velocity (+11.11) points to low-level stabilization with slight upward drift."
+      },
+      "energy_costs": {
+        "scores": [
+          40,
+          41,
+          43
+        ],
+        "reason": "Nine consecutive sessions of gains reaching 38 supported by positive 4-week velocity (+22.58) drive continuing upward momentum."
+      },
+      "data_wall": {
+        "scores": [
+          50,
+          50,
+          49
+        ],
+        "reason": "Unchanged scores at 50 with flat 4-week velocity (0.00) and negative 12-week velocity (-7.41) signal steady neutral conditions."
+      },
+      "narrative": {
+        "scores": [
+          22,
+          24,
+          25
+        ],
+        "reason": "A continuous multi-week climb reaching 21 confirms a steady, uninterrupted recovery trajectory in narrative dominance."
+      }
+    }
   }
 ]
