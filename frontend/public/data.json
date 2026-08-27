@@ -5785,5 +5785,192 @@
       "adjusted_risk": "UNCERTAIN",
       "adjustment_reason": "Bubble (0.80) and boom (0.79) both plausible."
     }
+  },
+  {
+    "run_id": "40e35320-5706-4774-a5ab-e1ca52daf83a",
+    "run_date": "2026-08-27T14:26:56.008991",
+    "dayId": "2026-08-27",
+    "composite_score": 26.1,
+    "composite_lower": 18.0,
+    "composite_upper": 34.2,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 18.0,
+      "upper": 34.2,
+      "std_dev": 4.13,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 2,
+        "raw_value": 0.1915,
+        "velocity_4wk": -80.0,
+        "velocity_12wk": -96.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 5,
+        "raw_value": -0.7824,
+        "velocity_4wk": 150.0,
+        "velocity_12wk": -90.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 5,
+        "raw_value": 11.9,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 96,
+        "raw_value": 5.3005,
+        "velocity_4wk": 92.0,
+        "velocity_12wk": 92.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 11,
+        "raw_value": 0.3852,
+        "velocity_4wk": -68.57,
+        "velocity_12wk": -85.33,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 4,
+        "raw_value": 2.67,
+        "velocity_4wk": -95.74,
+        "velocity_12wk": -92.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 39,
+        "raw_value": 0.197,
+        "velocity_4wk": 11.43,
+        "velocity_12wk": -22.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 0.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 23,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2005-01-03",
+          "similarity": 0.742,
+          "weeks_to_peak": 129,
+          "max_drawdown_pct": -52
+        },
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2006-06-05",
+          "similarity": 0.723,
+          "weeks_to_peak": 55,
+          "max_drawdown_pct": -52
+        },
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2007-03-05",
+          "similarity": 0.703,
+          "weeks_to_peak": 16,
+          "max_drawdown_pct": -52
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "cloud_2012_2015",
+          "episode_name": "Cloud Computing Boom",
+          "week_matched": "2012-06-04",
+          "similarity": 0.731,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "cloud_2012_2015",
+          "episode_name": "Cloud Computing Boom",
+          "week_matched": "2013-06-03",
+          "similarity": 0.707,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "cloud_2012_2015",
+          "episode_name": "Cloud Computing Boom",
+          "week_matched": "2014-06-02",
+          "similarity": 0.693,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.74) and boom (0.73) both plausible."
+    }
   }
 ]
