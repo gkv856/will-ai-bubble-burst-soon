@@ -9607,5 +9607,274 @@
         "reason": "Narrative dominance displays an unbroken incremental upward drift, moving from 27 to 34 over the observation period."
       }
     }
+  },
+  {
+    "run_id": "28099dba-f97a-4e5c-88e8-a48286516f15",
+    "run_date": "2026-09-24T08:39:30.185481",
+    "dayId": "2026-09-24",
+    "composite_score": 43.6,
+    "composite_lower": 37.5,
+    "composite_upper": 49.7,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 37.5,
+      "upper": 49.7,
+      "std_dev": 3.13,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 49,
+        "raw_value": 0.1797,
+        "velocity_4wk": 157.89,
+        "velocity_12wk": 75.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 93,
+        "raw_value": -0.929,
+        "velocity_4wk": -6.06,
+        "velocity_12wk": 3000.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 7,
+        "raw_value": 4.91,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 56,
+        "raw_value": 5.6436,
+        "velocity_4wk": -30.0,
+        "velocity_12wk": -34.88,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 60,
+        "raw_value": 0.3312,
+        "velocity_4wk": 42.86,
+        "velocity_12wk": 445.45,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 30,
+        "raw_value": 2.68,
+        "velocity_4wk": -21.05,
+        "velocity_12wk": 100.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 13,
+        "raw_value": 0.196,
+        "velocity_4wk": 62.5,
+        "velocity_12wk": -69.77,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 0.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 34,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "dotcom_1998_2000",
+          "episode_name": "Dot-Com Bubble",
+          "week_matched": "1998-06-01",
+          "similarity": 0.903,
+          "weeks_to_peak": 92,
+          "max_drawdown_pct": -78
+        },
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-01-04",
+          "similarity": 0.885,
+          "weeks_to_peak": 44,
+          "max_drawdown_pct": -77
+        },
+        {
+          "episode_id": "housing_2005_2008",
+          "episode_name": "US Housing Bubble",
+          "week_matched": "2005-01-03",
+          "similarity": 0.88,
+          "weeks_to_peak": 129,
+          "max_drawdown_pct": -52
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "saas_2017_2019",
+          "episode_name": "SaaS Expansion",
+          "week_matched": "2017-06-05",
+          "similarity": 0.896,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.896,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "cloud_2012_2015",
+          "episode_name": "Cloud Computing Boom",
+          "week_matched": "2012-06-04",
+          "similarity": 0.895,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "UNCERTAIN",
+      "adjustment_reason": "Bubble (0.90) and boom (0.90) both plausible."
+    },
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          44,
+          45,
+          45
+        ],
+        "reason": "The composite rebounds following GPU spot recovery and firming demand reality, stabilizing in the mid-40s as valuation softens slightly."
+      },
+      "demand_reality": {
+        "scores": [
+          49,
+          50,
+          50
+        ],
+        "reason": "Demand reality remains steady at 49, supported by positive 4-week (+157.89%) and 12-week (+75.0%) velocities pointing toward sustained stability."
+      },
+      "erp_valuation": {
+        "scores": [
+          91,
+          89,
+          88
+        ],
+        "reason": "Valuation risk is easing off peak levels, falling from 97 to 93 with negative 4-week velocity of -6.06% indicating a minor downward correction."
+      },
+      "retail_fomo": {
+        "scores": [
+          9,
+          11,
+          13
+        ],
+        "reason": "Retail sentiment continues its multi-day rebound from a low of 1 to 7, driven by a steady recovery in raw participation values."
+      },
+      "m2_liquidity": {
+        "scores": [
+          55,
+          54,
+          53
+        ],
+        "reason": "Liquidity remains in a lower regime after stepping down to 56, with negative 4-week (-30.0%) and 12-week (-34.88%) velocities maintaining downward pressure."
+      },
+      "gpu_spot": {
+        "scores": [
+          64,
+          67,
+          70
+        ],
+        "reason": "GPU spot rebounded sharply from 6 to 60, backed by strong 4-week (+42.86%) and 12-week (+445.45%) velocities that support continued upward momentum."
+      },
+      "credit_spreads": {
+        "scores": [
+          31,
+          31,
+          30
+        ],
+        "reason": "Credit risk recovered to 30 but faces negative 4-week velocity of -21.05%, suggesting sideways consolidation near current levels."
+      },
+      "energy_costs": {
+        "scores": [
+          14,
+          15,
+          16
+        ],
+        "reason": "Energy costs exhibit an incremental daily upward climb from 8 to 13, reinforced by solid positive 4-week velocity of +62.5%."
+      },
+      "data_wall": {
+        "scores": [
+          50,
+          50,
+          50
+        ],
+        "reason": "Data wall metrics remain completely stationary at 50 with flat 0.0% velocity across both 4-week and 12-week horizons."
+      },
+      "narrative": {
+        "scores": [
+          34,
+          35,
+          35
+        ],
+        "reason": "Narrative dominance maintains a slow, persistent upward drift, reaching 34 and expected to edge slightly higher."
+      }
+    }
   }
 ]
