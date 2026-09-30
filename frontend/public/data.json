@@ -10437,5 +10437,192 @@
       "adjusted_risk": "BOOM",
       "adjustment_reason": "Boom analog dominates (0.88 vs 0.83)."
     }
+  },
+  {
+    "run_id": "8b507925-3929-4779-b8a2-2fd455c4f813",
+    "run_date": "2026-09-30T09:55:28.997718",
+    "dayId": "2026-09-30",
+    "composite_score": 65.5,
+    "composite_lower": 57.8,
+    "composite_upper": 73.2,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 57.8,
+      "upper": 73.2,
+      "std_dev": 3.91,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.18000000000000002,
+      "erp_valuation": 0.09111111111111111,
+      "retail_fomo": 0.09111111111111111,
+      "m2_liquidity": 0.09111111111111111,
+      "gpu_spot": 0.09111111111111111,
+      "credit_spreads": 0.18222222222222226,
+      "energy_costs": 0.09111111111111111,
+      "data_wall": 0.09111111111111111,
+      "narrative": 0.09111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 97,
+        "raw_value": 0.1734,
+        "velocity_4wk": 97.96,
+        "velocity_12wk": 110.87,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.18000000000000002
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 99,
+        "raw_value": -1.19,
+        "velocity_4wk": 6.45,
+        "velocity_12wk": 3.12,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 14,
+        "raw_value": 5.08,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 56,
+        "raw_value": 5.6436,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -31.71,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 57,
+        "raw_value": 0.3475,
+        "velocity_4wk": -5.0,
+        "velocity_12wk": 235.29,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 99,
+        "raw_value": 3.02,
+        "velocity_4wk": 230.0,
+        "velocity_12wk": 160.53,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.18222222222222226
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 17,
+        "raw_value": 0.196,
+        "velocity_4wk": 30.77,
+        "velocity_12wk": 750.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 0.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 36,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "dotcom_1998_2000",
+          "episode_name": "Dot-Com Bubble",
+          "week_matched": "1998-06-01",
+          "similarity": 0.867,
+          "weeks_to_peak": 92,
+          "max_drawdown_pct": -78
+        },
+        {
+          "episode_id": "dotcom_1998_2000",
+          "episode_name": "Dot-Com Bubble",
+          "week_matched": "1999-01-04",
+          "similarity": 0.847,
+          "weeks_to_peak": 61,
+          "max_drawdown_pct": -78
+        },
+        {
+          "episode_id": "dotcom_1998_2000",
+          "episode_name": "Dot-Com Bubble",
+          "week_matched": "1999-06-07",
+          "similarity": 0.84,
+          "weeks_to_peak": 39,
+          "max_drawdown_pct": -78
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "saas_2017_2019",
+          "episode_name": "SaaS Expansion",
+          "week_matched": "2017-06-05",
+          "similarity": 0.899,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "saas_2017_2019",
+          "episode_name": "SaaS Expansion",
+          "week_matched": "2018-06-04",
+          "similarity": 0.895,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "cloud_2012_2015",
+          "episode_name": "Cloud Computing Boom",
+          "week_matched": "2012-06-04",
+          "similarity": 0.885,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "BOOM",
+      "adjustment_reason": "Boom analog dominates (0.90 vs 0.87)."
+    }
   }
 ]
