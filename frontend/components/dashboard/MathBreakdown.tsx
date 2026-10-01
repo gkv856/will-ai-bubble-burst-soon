@@ -1,11 +1,8 @@
 "use client";
 
 import { LatestScores } from "@/lib/api";
-import { FACTORS, HOW_IT_WORKS } from "@/lib/factors-data";
-import {
-  StepCard,
-  FactorAccordion,
-} from "@/components/dashboard/FactorAccordion";
+import { HOW_IT_WORKS } from "@/lib/factors-data";
+import { StepCard } from "@/components/dashboard/StepCard";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
@@ -53,20 +50,6 @@ export function MathBreakdown({
         {HOW_IT_WORKS.map((s, i) => (
           <StepCard key={i} step={i + 1} title={s.title} body={s.body} />
         ))}
-      </div>
-
-      <div className="section-divider" />
-
-      {/* Per-factor accordion */}
-      <div className="space-y-2">
-        <p className="text-[9px] font-mono text-white/25 uppercase tracking-[0.15em] mb-3">
-          Click any signal to see the formula and full explanation
-        </p>
-        <div className="space-y-1.5">
-          {FACTORS.map((f) => (
-            <FactorAccordion key={f.id} f={f} />
-          ))}
-        </div>
       </div>
     </section>
   );

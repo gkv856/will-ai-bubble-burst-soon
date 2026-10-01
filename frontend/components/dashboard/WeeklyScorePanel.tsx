@@ -3,18 +3,21 @@
 import { useState, useEffect } from "react";
 import { LatestScores } from "@/lib/api";
 
-// Maps factor IDs → human labels + weights
-const FACTOR_META: { id: string; label: string; weight: number }[] = [
-  { id: "demand_reality", label: "Demand Reality",   weight: 20 },
-  { id: "erp_valuation",  label: "ERP Valuation",    weight: 20 },
-  { id: "retail_fomo",    label: "Retail FOMO",      weight: 15 },
-  { id: "m2_liquidity",   label: "M2 Liquidity",     weight: 15 },
-  { id: "gpu_spot",       label: "GPU Spot Prices",  weight: 10 },
-  { id: "credit_spreads", label: "Credit Spreads",   weight: 10 },
-  { id: "data_wall",      label: "Data Wall",        weight:  5 },
-  { id: "energy_costs",   label: "Energy Costs",     weight:  5 },
-  { id: "narrative",      label: "Narrative",        weight: 16 },
+// Maps factor IDs → human labels
+const FACTOR_META: { id: string; label: string }[] = [
+  { id: "demand_reality", label: "Demand Reality" },
+  { id: "erp_valuation",  label: "ERP Valuation" },
+  { id: "retail_fomo",    label: "Retail FOMO" },
+  { id: "m2_liquidity",   label: "M2 Liquidity" },
+  { id: "gpu_spot",       label: "GPU Spot Prices" },
+  { id: "credit_spreads", label: "Credit Spreads" },
+  { id: "data_wall",      label: "Data Wall" },
+  { id: "energy_costs",   label: "Energy Costs" },
+  { id: "narrative",      label: "Narrative" },
 ];
+
+// Fallback when a signal carries no weight_used: all nine start equal.
+const DEFAULT_WEIGHT_PCT = Math.round(100 / FACTOR_META.length);
 
 function barColor(score: number) {
   if (score < 40) return { bar: "#10b981", glow: "rgba(16,185,129,0.35)" };
@@ -99,7 +102,7 @@ export function WeeklyScorePanel({ latestData }: { latestData: LatestScores | nu
       {/* Factor bars — horizontal chart per skill recommendation */}
       <div className="px-6 py-5 space-y-3.5">
         <p className="text-[9px] font-mono text-white/20 uppercase tracking-[0.15em] mb-4">Score breakdown — each bar shows that signal&apos;s risk level (0 = safe, 100 = danger)</p>
-        {FACTOR_META.map(({ id, label, weight }) => {
+        {FACTOR_META.map(({ id, label }) => {
           const signal = latestData?.signals?.find((s) => s.factor_id === id);
           const raw = signal?.score ?? null;
           const pct = raw !== null ? raw : 0;
@@ -111,7 +114,7 @@ export function WeeklyScorePanel({ latestData }: { latestData: LatestScores | nu
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-mono text-white/50">{label}</span>
-                  <span className="text-[9px] font-mono text-white/20">{signal?.weight_used != null ? Math.round(signal.weight_used * 100) : weight}% weight</span>
+                  <span className="text-[9px] font-mono text-white/20">{signal?.weight_used != null ? Math.round(signal.weight_used * 100) : DEFAULT_WEIGHT_PCT}% weight</span>
                 </div>
                 <div className="flex items-center gap-2">
                   {raw !== null && (
