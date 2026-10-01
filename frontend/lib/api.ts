@@ -5,7 +5,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { unstable_noStore as noStore } from 'next/cache';
-import type { AiPrediction } from './types';
+import type { AiPrediction, SignalTrend } from './types';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -126,6 +126,52 @@ export async function fetchSignalHistory(factorId: string, weeks = 52) {
     };
   });
   return { data: formatted };
+}
+
+export interface HistoryContext {
+  /** Number of readings recorded so far — the pool every score is ranked against. */
+  readings: number;
+  /** ISO date of the first reading, or null when there is no history. */
+  since: string | null;
+  /** Score movement per signal vs. roughly a month ago (null when history is too short). */
+  trends: Record<string, SignalTrend | null>;
+}
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const TREND_LOOKBACK_DAYS = 28;
+const TREND_MIN_DAYS = 5;
+
+/**
+ * Compares the latest reading with the one closest to four weeks earlier. If the
+ * history is shorter than that, falls back to the oldest reading — and reports no
+ * trend at all when even that is under TREND_MIN_DAYS old.
+ *
+ * Computed from the stored scores rather than the pipeline's `velocity_4wk`, which
+ * counts runs (not weeks) and so means "4 days" now that the pipeline runs daily.
+ */
+export async function fetchHistoryContext(): Promise<HistoryContext> {
+  const data = await fetchJson();
+  if (!data || data.length === 0) return { readings: 0, since: null, trends: {} };
+
+  const sorted = [...data].sort((a, b) => a.run_date.localeCompare(b.run_date));
+  const latest = sorted[sorted.length - 1];
+  const latestMs = Date.parse(latest.run_date);
+
+  const cutoffMs = latestMs - TREND_LOOKBACK_DAYS * DAY_MS;
+  const onOrBeforeCutoff = sorted.filter((e) => Date.parse(e.run_date) <= cutoffMs);
+  const baseline = onOrBeforeCutoff.length > 0 ? onOrBeforeCutoff[onOrBeforeCutoff.length - 1] : sorted[0];
+  const daysAgo = Math.round((latestMs - Date.parse(baseline.run_date)) / DAY_MS);
+
+  const trends: Record<string, SignalTrend | null> = {};
+  for (const s of latest.signals ?? []) {
+    const before = baseline.signals?.find((b) => b.factor_id === s.factor_id)?.score;
+    trends[s.factor_id] =
+      daysAgo >= TREND_MIN_DAYS && s.score != null && before != null
+        ? { delta: s.score - before, daysAgo }
+        : null;
+  }
+
+  return { readings: sorted.length, since: sorted[0].run_date, trends };
 }
 
 export async function fetchAnalogs() {

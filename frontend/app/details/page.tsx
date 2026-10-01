@@ -1,9 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { FactorCard } from "@/components/dashboard/FactorCard";
+import { SignalOverview } from "@/components/dashboard/SignalOverview";
 import { EmailSignup } from "@/components/dashboard/EmailSignup";
-import { fetchLatestScores } from "@/lib/api";
+import { fetchHistoryContext, fetchLatestScores } from "@/lib/api";
+import { SIGNAL_COPY, SIGNAL_ORDER } from "@/lib/plain-english";
 import {
   Activity,
   GitBranch,
@@ -22,22 +23,16 @@ const MathBreakdown = dynamic(
 
 import { MethodologyCard } from "@/components/dashboard/MethodologyCard";
 import { StatusIcon } from "@/components/dashboard/StatusIcon";
-import {
-  FACTOR_CARDS_DATA,
-  METHODOLOGY_CARDS_DATA,
-  revalidate,
-} from "@/components/dashboard/CompData";
+import { revalidate } from "@/components/dashboard/CompData";
 
 // ── Details page (Server Component) ──────────────────────────────────────────
 export default async function DetailsPage() {
-  const latest = await fetchLatestScores();
+  const [latest, historyContext] = await Promise.all([
+    fetchLatestScores(),
+    fetchHistoryContext(),
+  ]);
   const compositeScore = latest?.composite_score ?? null;
-  const signalMap =
-    latest?.signals && Array.isArray(latest.signals)
-      ? Object.fromEntries(
-          latest.signals.map((s) => [s.factor_id, s.score ?? null]),
-        )
-      : {};
+  const signals = latest && Array.isArray(latest.signals) ? latest.signals : [];
 
   const runDate = latest?.run_date
     ? new Date(latest.run_date).toLocaleDateString("en-US", {
@@ -101,8 +96,8 @@ export default async function DetailsPage() {
           Signal <span className="gradient-text-blue">Breakdown</span>
         </h1>
         <p className="text-white/40 text-sm font-mono max-w-xl">
-          Individual factor scores, scoring methodology, and the composite
-          calculation — as of {runDate || "latest data"}.
+          What each of the 9 signals is saying, how we score them, and how
+          they add up — as of {runDate || "latest data"}.
         </p>
       </section>
 
@@ -124,21 +119,14 @@ export default async function DetailsPage() {
                 id="signals-heading"
                 className="text-sm font-mono font-semibold text-white/60 uppercase tracking-widest"
               >
-                Live Signals
+                What the signals say
               </h2>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {FACTOR_CARDS_DATA.map((card) => (
-                <FactorCard
-                  key={card.id}
-                  title={card.title}
-                  score={signalMap[card.id] ?? null}
-                  id={card.id}
-                  desc={card.desc}
-                  aiPrediction={latest?.aiPredictions?.[card.id]}
-                />
-              ))}
-            </div>
+            <SignalOverview
+              signals={signals}
+              context={historyContext}
+              aiPredictions={latest?.aiPredictions}
+            />
           </section>
           <div className="section-divider" />
 
@@ -158,15 +146,18 @@ export default async function DetailsPage() {
               </h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {METHODOLOGY_CARDS_DATA.map((card) => (
-                <MethodologyCard
-                  key={card.id}
-                  id={card.id}
-                  title={card.title}
-                  weight={card.weight}
-                  desc={card.desc}
-                />
-              ))}
+              {SIGNAL_ORDER.map((id, i) => {
+                const weight = signals.find((s) => s.factor_id === id)?.weight_used;
+                return (
+                  <MethodologyCard
+                    key={id}
+                    id={`F${i + 1}`}
+                    title={SIGNAL_COPY[id].title}
+                    weight={weight != null ? `${Math.round(weight * 100)}%` : "—"}
+                    desc={SIGNAL_COPY[id].why}
+                  />
+                );
+              })}
             </div>
           </section>
 

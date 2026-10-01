@@ -3,6 +3,14 @@ export interface AiPrediction {
   reason: string;
 }
 
+/** How a signal's 0–100 risk score moved between an earlier reading and the latest one. */
+export interface SignalTrend {
+  /** Latest score minus the earlier score. Positive = risk went up. */
+  delta: number;
+  /** How many days back the comparison reading is. */
+  daysAgo: number;
+}
+
 export interface WeekData {
   weekId?: string;
   dayId?: string;
