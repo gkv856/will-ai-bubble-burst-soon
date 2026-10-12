@@ -11933,5 +11933,274 @@
       "adjusted_risk": "BOOM",
       "adjustment_reason": "Boom analog dominates (0.86 vs 0.85)."
     }
+  },
+  {
+    "run_id": "2d2d15eb-0c23-428f-9bc5-82305c0d4b20",
+    "run_date": "2026-10-12T11:12:48.872726",
+    "dayId": "2026-10-12",
+    "composite_score": 54.3,
+    "composite_lower": 47.2,
+    "composite_upper": 61.4,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 47.2,
+      "upper": 61.4,
+      "std_dev": 3.64,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.1111111111111111,
+      "erp_valuation": 0.1111111111111111,
+      "retail_fomo": 0.1111111111111111,
+      "m2_liquidity": 0.1111111111111111,
+      "gpu_spot": 0.1111111111111111,
+      "credit_spreads": 0.1111111111111111,
+      "energy_costs": 0.1111111111111111,
+      "data_wall": 0.1111111111111111,
+      "narrative": 0.1111111111111111
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 21,
+        "raw_value": 0.1867,
+        "velocity_4wk": -78.12,
+        "velocity_12wk": -57.14,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 96,
+        "raw_value": -1.2447,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 3.23,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 18,
+        "raw_value": 8.01,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 55,
+        "raw_value": 5.6436,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": -1.79,
+        "stale": false,
+        "error_message": "LOCF Fallback (original error: fetch failed)",
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 90,
+        "raw_value": 0.3065,
+        "velocity_4wk": 3.45,
+        "velocity_12wk": 50.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 98,
+        "raw_value": 3.15,
+        "velocity_4wk": 2.08,
+        "velocity_12wk": 226.67,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 23,
+        "raw_value": 0.196,
+        "velocity_4wk": 15.0,
+        "velocity_12wk": 76.92,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 0.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 38,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.1111111111111111
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "dotcom_1998_2000",
+          "episode_name": "Dot-Com Bubble",
+          "week_matched": "1998-06-01",
+          "similarity": 0.817,
+          "weeks_to_peak": 92,
+          "max_drawdown_pct": -78
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-06-05",
+          "similarity": 0.811,
+          "weeks_to_peak": 27,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2021",
+          "episode_name": "Crypto Bubble 2021",
+          "week_matched": "2021-01-04",
+          "similarity": 0.805,
+          "weeks_to_peak": 44,
+          "max_drawdown_pct": -77
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.83,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.823,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.814,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "BOOM",
+      "adjustment_reason": "Boom analog dominates (0.83 vs 0.82)."
+    },
+    "aiPredictions": {
+      "composite": {
+        "scores": [
+          54,
+          54,
+          53
+        ],
+        "reason": "The composite stabilizes in the mid-50s as elevated GPU spot and credit spreads are balanced by collapsing demand reality metrics."
+      },
+      "demand_reality": {
+        "scores": [
+          18,
+          16,
+          15
+        ],
+        "reason": "Severe contraction persists following a sharp score drop to 21, driven by deeply negative 4-week (-78.12%) and 12-week (-57.14%) velocities."
+      },
+      "erp_valuation": {
+        "scores": [
+          96,
+          96,
+          97
+        ],
+        "reason": "Equity risk premium valuation remains pinned near historical extremes with flat 4-week velocity (0.0%) and mildly positive 12-week velocity (+3.23%)."
+      },
+      "retail_fomo": {
+        "scores": [
+          18,
+          17,
+          17
+        ],
+        "reason": "Retail sentiment leveled off at 18 after a steep decline from earlier peaks, exhibiting base-building behavior around current participation levels."
+      },
+      "m2_liquidity": {
+        "scores": [
+          55,
+          55,
+          55
+        ],
+        "reason": "Money supply conditions remain unchanged at 55 with 0.0% 4-week velocity and negligible 12-week change (-1.79%)."
+      },
+      "gpu_spot": {
+        "scores": [
+          89,
+          88,
+          87
+        ],
+        "reason": "GPU spot rebounded sharply to 90, supported by positive 4-week (+3.45%) and 12-week (+50.0%) velocities, maintaining high levels with mild consolidation."
+      },
+      "credit_spreads": {
+        "scores": [
+          98,
+          97,
+          97
+        ],
+        "reason": "Credit risk returned to near-ceiling levels at 98, underpinned by positive 4-week (+2.08%) and strong 12-week (+226.67%) velocities."
+      },
+      "energy_costs": {
+        "scores": [
+          24,
+          24,
+          25
+        ],
+        "reason": "Energy costs maintain a continuous multi-week upward drift to 23, supported by solid positive 4-week (+15.0%) and 12-week (+76.92%) velocities."
+      },
+      "data_wall": {
+        "scores": [
+          50,
+          50,
+          50
+        ],
+        "reason": "Data wall metrics remain completely stationary at 50 with flat 0.0% velocity across both short and medium horizons."
+      },
+      "narrative": {
+        "scores": [
+          38,
+          39,
+          39
+        ],
+        "reason": "Narrative dominance continues its slow, persistent upward trajectory, edging higher to 38."
+      }
+    }
   }
 ]
