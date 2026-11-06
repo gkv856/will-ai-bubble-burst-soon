@@ -15381,5 +15381,192 @@
       "adjusted_risk": "BOOM",
       "adjustment_reason": "Boom analog dominates (0.77 vs 0.76)."
     }
+  },
+  {
+    "run_id": "c030af81-0115-459b-8c34-66f0dab29fa4",
+    "run_date": "2026-11-06T11:19:07.395503",
+    "dayId": "2026-11-06",
+    "composite_score": 42.6,
+    "composite_lower": 35.2,
+    "composite_upper": 50.0,
+    "quality_verdict": "GREEN",
+    "confidence_interval": {
+      "lower": 35.2,
+      "upper": 50.0,
+      "std_dev": 3.79,
+      "degradation_multiplier": 1.0,
+      "confidence_level": "95%"
+    },
+    "correlation_penalty": 0.0,
+    "low_confidence": false,
+    "stale_signals": [],
+    "weights_used": {
+      "demand_reality": 0.09999999999999999,
+      "erp_valuation": 0.09999999999999999,
+      "retail_fomo": 0.09999999999999999,
+      "m2_liquidity": 0.09999999999999999,
+      "gpu_spot": 0.09999999999999999,
+      "credit_spreads": 0.2,
+      "energy_costs": 0.09999999999999999,
+      "data_wall": 0.09999999999999999,
+      "narrative": 0.09999999999999999
+    },
+    "signals": [
+      {
+        "factor_id": "demand_reality",
+        "name": "Demand Reality",
+        "score": 1,
+        "raw_value": 0.2211,
+        "velocity_4wk": -95.83,
+        "velocity_12wk": -91.67,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "erp_valuation",
+        "name": "ERP Valuation",
+        "score": 1,
+        "raw_value": -0.6118,
+        "velocity_4wk": -98.53,
+        "velocity_12wk": -98.63,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "retail_fomo",
+        "name": "Retail FOMO",
+        "score": 43,
+        "raw_value": 9.68,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "m2_liquidity",
+        "name": "M2 Liquidity",
+        "score": 4,
+        "raw_value": 5.9812,
+        "velocity_4wk": 100.0,
+        "velocity_12wk": -92.73,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "gpu_spot",
+        "name": "GPU Spot Prices",
+        "score": 71,
+        "raw_value": 0.3238,
+        "velocity_4wk": -15.48,
+        "velocity_12wk": 29.09,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "credit_spreads",
+        "name": "Credit Spreads",
+        "score": 93,
+        "raw_value": 3.32,
+        "velocity_4wk": 16.25,
+        "velocity_12wk": -6.06,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.2
+      },
+      {
+        "factor_id": "energy_costs",
+        "name": "Energy Costs",
+        "score": 30,
+        "raw_value": 0.196,
+        "velocity_4wk": 3.45,
+        "velocity_12wk": 15.38,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "data_wall",
+        "name": "Data Wall",
+        "score": 50,
+        "raw_value": 3.0,
+        "velocity_4wk": 0.0,
+        "velocity_12wk": 0.0,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      },
+      {
+        "factor_id": "narrative",
+        "name": "Narrative Dominance",
+        "score": 40,
+        "raw_value": 0.0,
+        "velocity_4wk": null,
+        "velocity_12wk": null,
+        "stale": false,
+        "error_message": null,
+        "weight_used": 0.09999999999999999
+      }
+    ],
+    "analogs": {
+      "bubble_analogs": [
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-06-05",
+          "similarity": 0.718,
+          "weeks_to_peak": 27,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-10-02",
+          "similarity": 0.705,
+          "weeks_to_peak": 10,
+          "max_drawdown_pct": -84
+        },
+        {
+          "episode_id": "crypto_2017",
+          "episode_name": "Crypto Bubble 2017",
+          "week_matched": "2017-12-04",
+          "similarity": 0.693,
+          "weeks_to_peak": 1,
+          "max_drawdown_pct": -84
+        }
+      ],
+      "boom_analogs": [
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2018-06-04",
+          "similarity": 0.719,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2017-06-05",
+          "similarity": 0.714,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        },
+        {
+          "episode_id": "ai_wave1_2016_2018",
+          "episode_name": "AI/ML Wave 1",
+          "week_matched": "2016-06-06",
+          "similarity": 0.702,
+          "weeks_to_peak": null,
+          "max_drawdown_pct": null
+        }
+      ],
+      "adjusted_risk": "BOOM",
+      "adjustment_reason": "Boom analog dominates (0.72 vs 0.72)."
+    }
   }
 ]
